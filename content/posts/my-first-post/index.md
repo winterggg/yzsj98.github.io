@@ -23,7 +23,7 @@ hide: false
 
 下图就是本文方法的网络架构图。其中这种对称的结构就是所谓的**教师-学生结构**，右边的是教师网络（也就是旧模型），左边是学生网络（新模型），学生网络学习教师网络（这部分具体如何操作的我也不太理解，之后看完代码再回来补充吧~）。
 
-![](https://cdn.jsdelivr.net/gh/TildenJ/pics@pics/images/2021/06/20210609101231_4ce61373b0302993ab8a73e8b7e6f7dd.png)
+![](assets/20210609101231_4ce61373b0302993ab8a73e8b7e6f7dd.png)
 
 因为教师和学生网络结构是一样的，所以只关注左边就好了。从图上可以看到，最左侧有 $M$ 簇图片，分别代表了不同的几何变换（Geometric Transformation），也就是说，一组样本会用 $M$ 种变换方式生成 $M$ 组图像，然后这些图像之后会输入同一个特征提取器里提取特征。那这些变换具体是什么呢？原文中举了一些例子，包括：Euclidean transformation、Similarity transformation、Affine transformation 以及 Projective transformation。变换组合的选取与具体的任务和数据集有关，至于本文的具体选取可以参考论文的第四章。
 
@@ -84,11 +84,11 @@ hide: false
 
 **mini-IN**：
 
-![](https://cdn.jsdelivr.net/gh/TildenJ/pics@pics/images/2021/06/20210609113937_df5706835dd8a5126dd5fc29c0330a9a.png)
+![](assets/20210609113937_df5706835dd8a5126dd5fc29c0330a9a.png)
 
 **tiered-IN**：
 
-![](https://cdn.jsdelivr.net/gh/TildenJ/pics@pics/images/2021/06/20210609113956_ff6ec25a24f89969f992d2e2d22ef091.png)
+![](assets/20210609113956_ff6ec25a24f89969f992d2e2d22ef091.png)
 
 
 

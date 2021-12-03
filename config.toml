@@ -1,6 +1,6 @@
 baseURL = 'https://www.yizhishuijiao.com'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = 'Yzsj Site'
 theme = 'yinyang'
 
 [author]
