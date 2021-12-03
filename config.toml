@@ -1,6 +1,6 @@
 baseURL = 'https://www.yizhishuijiao.com'
 languageCode = 'en-us'
-title = 'Yzsj Site'
+title = "YZSJ's Notes"
 theme = 'yinyang'
 
 [author]
@@ -31,7 +31,7 @@ theme = 'yinyang'
 
 
 [params]
-headTitle = "YZSJ Site"
+headTitle = "YZSJ's Notes"
 mainSections = ["posts"]
 description = "Hello, I am yzsj98"
 zoomImage = true
