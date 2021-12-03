@@ -1,0 +1,54 @@
+baseURL = 'https://www.yizhishuijiao.com'
+languageCode = 'en-us'
+title = 'My New Hugo Site'
+theme = 'yinyang'
+
+[author]
+  name = "yzsj98"
+  homepage = "https://www.yizhishuijiao.com"
+
+[markup]
+  defaultMarkdownHandler = 'goldmark'
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ''
+    lineAnchors = ''
+    lineNoStart = 1
+    lineNos = true
+    lineNumbersInTable = true
+    noClasses = true
+    style = 'autumn'
+    tabWidth = 4
+  [markup.tableOfContents]
+    endLevel = 3
+    ordered = true
+    startLevel = 2
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+        unsafe = true
+    
+
+
+[params]
+headTitle = "YZSJ Site"
+mainSections = ["posts"]
+description = "Hello, I am yzsj98"
+zoomImage = true
+
+extraHead = '<script src="/js/tools.js"></script>'
+# extraCSSFiles = ["css/foo.css", "css/bar.css"]
+# postHeaderContent = "a"
+# postFooterContent = "<br/><br/><p>Subscribe to：<a target='_blank' href='https://mailchi.mp/a1a0d59e7a19/joway'>Joway's Blog</a></p>"
+
+# [[params.socials]]
+# name = "About Me"
+# link = "https://joway.io"
+[[params.socials]]
+name = "Github"
+link = "https://github.com/yzsj98"
+
+[[params.socials]]
+name = "RSS"
+link = "/index.xml"
+

@@ -1,0 +1,38 @@
+<!-- <script src="https://unpkg.com/quicklink@0.1.1/dist/quicklink.umd.js"></script> -->
+{{ if .Params.math }}
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [["$", "$"]],
+    },
+    displayMath: [
+      ["$$", "$$"],
+      ["\[\[", "\]\]"],
+    ],
+    svg: {
+      fontCache: "global",
+    },
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+></script>
+{{ end }}
+</script>
+{{ if and .Site.Params.zoomImage (not .IsHome) -}}
+<!-- <script src="{{ .Site.Params.staticPrefix }}{{ "js/lazyload.min.js" | relURL }}"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script>
+<script>
+  document.querySelectorAll('.post-content img').forEach(function (el) {el.parentNode.nodeName.toLowerCase() === 'a' || mediumZoom(el, { margin: 24 })})
+</script>
+{{ end }}
+<script>
+  // var posts = document.getElementById('posts-list');
+  // posts && quicklink({
+    // el: posts,
+    // priority: true,
+  // });
+</script>
