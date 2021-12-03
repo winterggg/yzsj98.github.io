@@ -49,6 +49,10 @@ name = "Github"
 link = "https://github.com/yzsj98"
 
 [[params.socials]]
+name = "草稿"
+link = "https://yizhishuijiao.wordpress.com"
+
+[[params.socials]]
 name = "RSS"
 link = "/index.xml"
 
