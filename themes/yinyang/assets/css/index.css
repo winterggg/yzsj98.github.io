@@ -124,7 +124,7 @@ a:hover {
 /* posts list */
 
 #posts-list {
-  min-height: 600px;
+  min-height: calc(100vh - 350px);
 }
 
 .posts-line {
