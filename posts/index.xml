@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on YZSJ's Notes</title><link>https://www.yizhishuijiao.com/posts/</link><description>Recent content in Posts on YZSJ's Notes</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 04 Dec 2021 00:54:32 +0800</lastBuildDate><atom:link href="https://www.yizhishuijiao.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Hello, World!</title><link>https://www.yizhishuijiao.com/posts/hello-world/</link><pubDate>Sat, 04 Dec 2021 00:54:32 +0800</pubDate><guid>https://www.yizhishuijiao.com/posts/hello-world/</guid><description>Intro 👋 Hi, I’m @yzsj98 一只水饺 👀 I’m interested in sleeping all the time 🌱 I’m currently learning programming 闲聊 大概在不久前，突然想给自己起个网名，原因是觉得之前一直用的真实姓名不太好。于是花时间想了想，最终决定使用一只水饺。也没有啥特别的意思，大概就是自己睡眠不是很足，希望能够一直睡个好觉，嘿嘿。顺便也买了一个新域名 YiZhiShuiJiao.Com。
 恰好最近在学 Go，新网站的静态页面生成器就用 Hugo 好了。
-功能测试 晚上折腾了一会儿，从网上找了个几乎没啥功能的 Hugo 主题，改了一下，加了一些必要的功能。目前还有很多问题。接下来是简单的功能测试：
-脚注功能测试 Hugo居然默认支持脚注，省了不少事情。本站所有源码托管于 Github1 上，使用 Github Action 自动部署2。
-目录测试 这个主题居然连目录都没有，于是自己简单写了一个，效果如下：
-Contents [Toggle] Intro 闲聊 功能测试 脚注功能测试 目录测试 图片测试 公式测试 隐藏文章功能 代码测试 Todo 其中点击右上角的 [Toggle] 可以展开收起目录。
-图片测试 点击可以放大。</description></item><item><title>Daily Paper 01 - Exploring Complementary Strengths of Invariant and Equivariant Representations for Few-Shot Learning</title><link>https://www.yizhishuijiao.com/posts/my-first-post/</link><pubDate>Fri, 03 Dec 2021 18:18:44 +0800</pubDate><guid>https://www.yizhishuijiao.com/posts/my-first-post/</guid><description>今天看的这篇比较简单，是一篇来自 CVPR 2021 的小样本图像分类论文。论文的标题是 Exploring Complementary Strengths of Invariant and Equivariant Representations for Few-Shot Learning1，官方代码2，Fork了一份防删3（看 Issue 的讨论4，这个方法似乎很消耗显存，有时间试试好了）。
+功能测试 晚上折腾了一会儿，从网上找了个几乎没啥功能的 Hugo 主题，改了一下，加了一些必要的功能。接下来是简单的功能测试：
+脚注功能测试 Hugo居然默认支持脚注，省了不少事情:
+本站所有源码托管于 Github1 上，使用 Github Action 自动部署2。
+目录测试 这个主题原本连目录都没有，只好自己写了一个，效果如下：
+Contents [Toggle] Intro 闲聊 功能测试 脚注功能测试 目录测试 图片测试 公式测试 隐藏文章功能 代码测试 Todo 在 PC 端访问时，可以点击右上角的 [Toggle] 展开收起目录。</description></item><item><title>Daily Paper 01 - Exploring Complementary Strengths of Invariant and Equivariant Representations for Few-Shot Learning</title><link>https://www.yizhishuijiao.com/posts/my-first-post/</link><pubDate>Fri, 03 Dec 2021 18:18:44 +0800</pubDate><guid>https://www.yizhishuijiao.com/posts/my-first-post/</guid><description>今天看的这篇比较简单，是一篇来自 CVPR 2021 的小样本图像分类论文。论文的标题是 Exploring Complementary Strengths of Invariant and Equivariant Representations for Few-Shot Learning1，官方代码2，Fork了一份防删3（看 Issue 的讨论4，这个方法似乎很消耗显存，有时间试试好了）。
 基本思想 这篇论文的工作在分类上属于最近比较常见的类别，即学习一个 better embedding。提出的方法也非常简单，一句话来概括就是用「多任务学习」的方式，把自监督学习中的 「学习不变性 Invariant」 和 「学习变性 Equivariant」 两个 「流派」 的损失函数整合起来，再加上标准的分类损失函数，一同学习一个厉害的特征提取器，来提升小样本任务的分类精度。另外作者还用到了一个叫做「多头自蒸馏」的方法进一步涨点，还挺神奇的。不过之前没接触过知识蒸馏，也不知道这个方法是作者发明的还是前人工作。
 一句题外话，把不变性和变性损失用多任务学习整合这个想法我在前段时间看自监督学习论文的时候也想到了，不过一直还没有尝试&amp;hellip; 唉，日常被自己菜哭😢。
 方法 让我们跳过无聊的「编故事」环节，来看看本文提出的方法吧~
