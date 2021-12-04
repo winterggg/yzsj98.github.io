@@ -79,7 +79,7 @@
           {{ end }}
           <!-- split -->
           <div style="height: 50px;"></div>
-          {{ if .Site.Params.disqus }}
+          {{ if and .Site.Params.disqus .Params.comment}}
           <div class="post-comments">
             {{ partial "disqus.html" . }}
           </div>

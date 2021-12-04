@@ -35,6 +35,7 @@ headTitle = "YZSJ's Notes"
 mainSections = ["posts"]
 description = "Hello, I am yzsj98"
 zoomImage = true
+disqus = 'yizhishuijiao'
 
 extraHead = '<script src="/js/tools.js"></script>'
 # extraCSSFiles = ["css/foo.css", "css/bar.css"]
