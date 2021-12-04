@@ -4,5 +4,4 @@
 脚注功能测试 Hugo居然默认支持脚注，省了不少事情。本站所有源码托管于 Github1 上，使用 Github Action 自动部署2。
 目录测试 这个主题居然连目录都没有，于是自己简单写了一个，效果如下：
 Contents [Toggle] Intro 闲聊 功能测试 脚注功能测试 目录测试 图片测试 公式测试 隐藏文章功能 代码测试 Todo 其中点击右上角的 [Toggle] 可以展开收起目录。
-图片测试 点击可以放大。
-公式测试 Front Matter 里开启 math 属性即可使用公式。</description></item></channel></rss>
+图片测试 点击可以放大。</description></item></channel></rss>
