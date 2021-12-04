@@ -3,7 +3,7 @@ title: "Graph Neural Networks 小抄"
 date: 2021-12-04T19:38:01+08:00
 draft: true
 math: true
-hide: true
+hide: false
 comment: true
 categories: ['Paper']
 ---
