@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>YZSJ's Notes</title><link>https://www.yizhishuijiao.com/</link><description>Recent content on YZSJ's Notes</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 04 Dec 2021 00:54:32 +0800</lastBuildDate><atom:link href="https://www.yizhishuijiao.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Hello, World!</title><link>https://www.yizhishuijiao.com/posts/hello-world/</link><pubDate>Sat, 04 Dec 2021 00:54:32 +0800</pubDate><guid>https://www.yizhishuijiao.com/posts/hello-world/</guid><description>Intro 👋 Hi, I’m @yzsj98 一只水饺 👀 I’m interested in sleeping all the time 🌱 I’m currently learning programming 闲聊 大概在不久前，突然想给自己起个网名，原因是觉得之前一直用的真实姓名不太好。于是花时间想了想，最终决定使用一只水饺。也没有啥特别的意思，大概就是自己睡眠不是很足，希望能够一直睡个好觉，嘿嘿。顺便也买了一个新域名 YiZhiShuiJiao.Com。
 恰好最近在学 Go，新网站的静态页面生成器就用 Hugo 好了。
-功能测试 晚上折腾，从网上找了个几乎没啥功能的 Hugo 主题，改了一下，加了一些必要的功能。目前还有很多问题。接下来是简单的功能测试：
+功能测试 晚上折腾了一会儿，从网上找了个几乎没啥功能的 Hugo 主题，改了一下，加了一些必要的功能。目前还有很多问题。接下来是简单的功能测试：
 脚注功能测试 Hugo居然默认支持脚注，省了不少事情。本站所有源码托管于 Github1 上，使用 Github Action 自动部署2。
 目录测试 这个主题居然连目录都没有，于是自己简单写了一个，效果如下：
 Contents [Toggle] Intro 闲聊 功能测试 脚注功能测试 目录测试 图片测试 公式测试 隐藏文章功能 代码测试 Todo 其中点击右上角的 [Toggle] 可以展开收起目录。
