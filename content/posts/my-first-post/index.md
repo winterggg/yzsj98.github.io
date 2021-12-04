@@ -5,6 +5,7 @@ categories: ['Paper']
 tags: ['小样本']
 math: true
 hide: true
+hideContents: true
 ---
 
 今天看的这篇比较简单，是一篇来自 CVPR 2021 的小样本图像分类论文。论文的标题是 Exploring Complementary Strengths of Invariant and Equivariant Representations for Few-Shot Learning[^1]，官方代码[^2]，Fork了一份防删[^3]（看 Issue 的讨论[^4]，这个方法似乎很消耗显存，有时间试试好了）。
