@@ -260,6 +260,7 @@ a:hover {
 
 .contents .hide-tool {
   position: absolute;
+  cursor: pointer;
   right: 5px;
   top: 0;
 }
