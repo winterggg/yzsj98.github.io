@@ -26,7 +26,7 @@
 <!-- <script src="{{ .Site.Params.staticPrefix }}{{ "js/lazyload.min.js" | relURL }}"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js"></script>
 <script>
-  document.querySelectorAll('.post-content img').forEach(function (el) {el.parentNode.nodeName.toLowerCase() === 'a' || mediumZoom(el, { margin: 24 })})
+  document.querySelectorAll('.post-content img').forEach(function (el) {el.parentNode.nodeName.toLowerCase() === 'a' || mediumZoom(el, { margin: 5, background: 'rgba(255,255,255,0.8)' })})
 </script>
 {{ end }}
 <script>

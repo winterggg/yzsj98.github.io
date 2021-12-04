@@ -7,23 +7,53 @@ categories: ['Daily']
 
 ## Intro
 
-- 👋 Hi, I’m @yzsj98 一只水饺
+- 👋 Hi, I’m [@yzsj98](https://github.com/yzsj98) 一只水饺
 - 👀 I’m interested in sleeping all the time
 - 🌱 I’m currently learning programming
 
 ## 闲聊
 
-大概在不久前，突然觉得得给自己起个网名，之前一直用的真实姓名感觉不太好。于是花时间想了想，最终决定使用“一只水饺”。也没有啥特别的意思，大概就是自己睡眠不是很足，希望能够一直睡个好觉，嘿嘿。顺便也买了一个域名 [YiZhiShuiJiao.Com](https://www.yizhishuijiao.com)。
+大概在不久前，突然想给自己起个网名，原因是觉得之前一直用的真实姓名不太好。于是花时间想了想，最终决定使用`一只水饺`。也没有啥特别的意思，大概就是自己睡眠不是很足，希望能够一直睡个好觉，嘿嘿。顺便也买了一个新域名 [YiZhiShuiJiao.Com](https://www.yizhishuijiao.com)。
 
 恰好最近在学 `Go`，新网站的静态页面生成器就用 `Hugo` 好了。
 
 ## 功能测试
 
-晚上花了点时间，从网上找了个几乎没啥功能的 Hugo 主题，改了一下，加了一些必要的功能。目前还有很多问题。接下来是简单的功能测试：
+晚上折腾，从网上找了个几乎没啥功能的 Hugo 主题，改了一下，加了一些必要的功能。目前还有很多问题。接下来是简单的功能测试：
 
 ### 脚注功能测试
 
-本站所有源码托管于 Github[^github] 上，使用 Github Action 自动部署[^deploy script]。
+Hugo居然默认支持脚注，省了不少事情。本站所有源码托管于 Github[^github] 上，使用 Github Action 自动部署[^deploy script]。
+
+### 目录测试
+
+这个主题居然连目录都没有，于是自己简单写了一个，效果如下：
+
+<div class="contents">
+            <span class="content-title">Contents</span>
+            <a class="hide-tool" onclick="toggleContents(event)">[Toggle]</a>
+            <div>
+              <nav>
+  <ol>
+    <li><a href="#intro">Intro</a></li>
+    <li><a href="#闲聊">闲聊</a></li>
+    <li><a href="#功能测试">功能测试</a>
+      <ol>
+        <li><a href="#脚注功能测试">脚注功能测试</a></li>
+        <li><a href="#目录测试">目录测试</a></li>
+        <li><a href="#图片测试">图片测试</a></li>
+        <li><a href="#公式测试">公式测试</a></li>
+        <li><a href="#隐藏文章功能">隐藏文章功能</a></li>
+        <li><a href="#代码测试">代码测试</a></li>
+        <li><a href="#todo">Todo</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+            </div>
+          </div>
+
+其中点击右上角的 `[Toggle]` 可以展开收起目录。
 
 ### 图片测试
 
@@ -48,7 +78,7 @@ $$
 
 ### 隐藏文章功能
 
-Front Matter 里开启 hide 属性即可隐藏。
+Front Matter 里开启 hide 属性即可隐藏当前文章（只能通过来链接🔗访问）。
 
 ```yaml
 hide: true

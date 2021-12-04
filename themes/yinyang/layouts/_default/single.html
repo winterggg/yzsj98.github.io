@@ -45,7 +45,7 @@
           {{ .Site.Params.postHeaderContent | safeHTML }}
           <div class="contents">
             <span class="content-title">Contents</span>
-            <a class="hide-tool" href="#" onclick="toggleContents()" class="hide">[Toggle]</a>
+            <a class="hide-tool" href="#" onclick="toggleContents(event)" class="hide">[Toggle]</a>
             <div id="content-body">
               {{ .TableOfContents }}
             </div>

@@ -17,7 +17,8 @@ body {
 }
 
 code {
-  font-family: "Fira Code";
+  font-family: "Fira Code", "Noto Serif SC";
+  font-weight: 600;
 }
 
 article {
