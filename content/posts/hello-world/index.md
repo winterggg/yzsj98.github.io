@@ -29,9 +29,10 @@ Hugo居然默认支持脚注，省了不少事情。本站所有源码托管于 
 
 这个主题居然连目录都没有，于是自己简单写了一个，效果如下：
 
-<div class="contents">
+<div>
+<div class="contents" style="width:80%;margin: 0 auto;">
             <span class="content-title">Contents</span>
-            <a class="hide-tool" onclick="toggleContents(event)">[Toggle]</a>
+            <a class="hide-tool" style="disaplay: block" onclick="toggleContents(event)">[Toggle]</a>
             <div>
               <nav>
   <ol>
@@ -50,8 +51,9 @@ Hugo居然默认支持脚注，省了不少事情。本站所有源码托管于 
     </li>
   </ol>
 </nav>
-            </div>
-          </div>
+  </div>
+ </div>
+</div>
 
 其中点击右上角的 `[Toggle]` 可以展开收起目录。
 
