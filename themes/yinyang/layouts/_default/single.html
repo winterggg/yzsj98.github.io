@@ -77,6 +77,8 @@
           {{ if .Site.Params.postAds }}
           <div class="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
           {{ end }}
+        {{ end }}
+
           <!-- split -->
           <div style="height: 50px;"></div>
           {{ if and .Site.Params.disqus .Params.comment}}
@@ -84,7 +86,6 @@
             {{ partial "disqus.html" . }}
           </div>
           {{ end }}
-        {{ end }}
 
         {{ partial "footer.html" . }}
       </div>
