@@ -36,7 +36,7 @@ mainSections = ["posts"]
 description = "Hello, I am yzsj98"
 zoomImage = true
 disqus = 'yizhishuijiao'
-favicon = '/favicon.ico'
+favicon = 'https://www.yizhishuijiao.com/favicon.ico'
 
 extraHead = '<script src="/js/tools.js"></script>'
 # extraCSSFiles = ["css/foo.css", "css/bar.css"]
