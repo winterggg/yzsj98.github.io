@@ -1,6 +1,6 @@
 baseURL = 'https://www.yizhishuijiao.com'
-languageCode = 'en-us'
-title = "YZSJ's Notes"
+languageCode = 'zh-cn'
+title = "一只水饺的笔记"
 theme = 'yinyang'
 
 [author]

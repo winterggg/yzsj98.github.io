@@ -10,7 +10,7 @@
           {{ partial "header.html" . }}
         </div>
         <header class="post-header">
-          <div class="post-title">{{ .Title }}</div>
+          <h1 class="post-title">{{ .Title }}</h1>
           {{ if .Date }}
               <time class="post-date" datetime="{{ .Date.Format "2006-01-02 15:04:05 MST" }}">
                 {{ .Date.Format "02 Jan 2006" }}
