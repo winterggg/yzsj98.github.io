@@ -138,6 +138,14 @@ a:hover {
   text-align: center;
 }
 
+.posts-date,
+.site-footer,
+.posts-category,
+.site-date-catalog,
+.post-tags {
+  user-select: none;
+}
+
 .posts-category {
   padding: 3px 0;
   border: #000 2px solid;

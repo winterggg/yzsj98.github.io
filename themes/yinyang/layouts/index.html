@@ -6,7 +6,9 @@
   <article class="posts">
     <div class="row">
       <div class="col-xs-12">
-        {{ partial "header.html" . }}
+        <div class="site-header">
+          {{ partial "header.html" . }}
+        </div>
         <div id="posts-list">
           {{ range (where (where site.RegularPages "Type" "in" site.Params.mainSections) "Params.hide" "!=" true).GroupByDate "2006" -}}
           <section>
