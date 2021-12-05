@@ -12,7 +12,7 @@
         {
             "label": "preview",
             "type": "shell",
-            "command": "hugo server -D",
+            "command": "hugo server",
             "problemMatcher": []
         },
         {
