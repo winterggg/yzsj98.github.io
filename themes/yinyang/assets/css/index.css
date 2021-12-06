@@ -1,9 +1,9 @@
 /* global */
 
-h1, h2, h3, h4, h5, h6 {
-  border-bottom: 1px solid;
-  border-color: #eee;
+article.post h1, h2, h3, h4, h5, h6 {
+  border-bottom: 1px solid #b3b3b3;
 }
+
 
 .site-header {
   user-select: none;
@@ -64,17 +64,27 @@ a:hover {
 .markdown-body code {
   padding: 0.2em 0.4em;
   font-size: 85%;
+  background-color: #e2e2e2;
   background-color: #f6f8fa;
-  border-radius: 6px;
+  display: inline-block;
+  border-radius: 5px;
 }
 
 /* reset code */
 
+.markdown-body pre {
+  background-color: #e2e2e2!important;
+}
 .markdown-body pre > code {
   padding: 0;
   font-size: 100%;
   background-color: inherit;
   border: 0;
+  display: inherit;
+}
+
+article div.highlight {
+  overflow-x:auto;
 }
 
 /* i18n */
@@ -173,6 +183,7 @@ a:hover {
 
 .post-content img {
   max-width: 100%;
+  max-height: 400px;
   display: block;
   margin-right: auto;
   margin-top: 12px;
@@ -183,7 +194,7 @@ a:hover {
 }
 
 .post-title {
-  margin: 20px 0;
+  margin: 20px 0 5px;
   font-size: 2rem;
   font-weight: 600;
 }
@@ -361,4 +372,29 @@ a:hover {
   margin: 0;
 }
 
+.markdown-body > table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 100%;
+  overflow: auto;
+}
+.markdown-body > table td,
+.markdown-body > table th {
+  padding: 0;
+}
+.markdown-body > table th {
+  font-weight: 600;
+}
+.markdown-body > table td,
+.markdown-body > table th {
+  padding: 6px 13px;
+  border: 1px solid #b3b3b3;
+}
+.markdown-body > table tr {
+  background-color: #fff;
+  border: 1px solid #ededef;
+}
+.markdown-body > table tr:nth-child(2n) {
+  background-color: #f7f7f7;
+}
 

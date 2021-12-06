@@ -15,11 +15,11 @@ theme = 'yinyang'
     hl_Lines = ''
     lineAnchors = ''
     lineNoStart = 1
-    lineNos = true
-    lineNumbersInTable = true
+    lineNos = false
+    lineNumbersInTable = false
+    style = 'xcode'
     noClasses = true
-    style = 'autumn'
-    tabWidth = 4
+    tabWidth = 2
   [markup.tableOfContents]
     endLevel = 3
     ordered = true
