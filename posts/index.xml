@@ -4,4 +4,6 @@
 脚注功能测试 Hugo居然默认支持脚注，省了不少事情:
 本站所有源码托管于 Github1 上，使用 Github Action 自动部署2。
 目录测试 这个主题原本连目录都没有，只好自己写了一个，效果如下：
-Contents [Toggle] Intro 闲聊 功能测试 脚注功能测试 目录测试 图片测试 公式测试 隐藏文章功能 代码测试 Todo 在 PC 端访问时，可以点击右上角的 [Toggle] 展开收起目录。</description></item></channel></rss>
+Contents [Toggle] Intro 闲聊 功能测试 脚注功能测试 目录测试 图片测试 公式测试 隐藏文章功能 代码测试 Todo 在 PC 端访问时，可以点击右上角的 [Toggle] 展开收起目录。</description></item><item><title>使用 Jenkins 和 Gitee 自动部署博客</title><link>https://www.yizhishuijiao.com/posts/tech/automating-blog-deployment-with-jenkins-and-gitee/</link><pubDate>Mon, 24 May 2021 00:00:00 +0000</pubDate><guid>https://www.yizhishuijiao.com/posts/tech/automating-blog-deployment-with-jenkins-and-gitee/</guid><description>本文介绍如何在自建服务器上使用 Jenkins 和 Gitee 部署博客，当 Git 仓库发生变更后能自动部署并发布博客。本文以 Hexo 为例，其他静态网站生成器的操作类似。
+环境信息 环境 版本 操作系统 CentOS 7 Jenkins 2.277.4 JDK 1.8.0_282 Nginx 1.18.0 Git Host Gitee 配置 Jenkins 安装 Jenkins 参考 官方文档 安装即可， CentOS 的步骤如下 ：
+# 添加 Yum 源 sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo # 导入密钥 sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key sudo yum install -y jenkins （可选）Jenkins 默认端口为 8080，可以在配置文件里修改：</description></item></channel></rss>
