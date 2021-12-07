@@ -327,6 +327,21 @@ article div.highlight {
   /* background: white; */
 }
 
+.disqus_tip {
+  text-align: center;
+  margin-bottom: 20px;
+  height: 80px;
+  background-color: #f6f8fa;
+  border-radius: 5px;
+  padding: 0.4em 0.8em;
+}
+
+.disqus_tip div.tip_words {
+  position: relative;
+  font-size: 18px;
+  top:50%;
+  transform:translateY(-50%);
+}
 @media screen and (max-width: 600px) {
   /* .header-title,
   .header-subtitle,
