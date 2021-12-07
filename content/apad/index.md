@@ -5,6 +5,7 @@ math: false
 hide: false
 hideContents: false
 comment: true
+categories: ['Page']
 ---
 
 > 每天读一篇论文，看看我能坚持多久。

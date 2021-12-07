@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}" prefix="og: http://ogp.me/ns#">
+{{ partial "head.html" . }}
+
+<body>
+  <article class="posts">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="site-header">
+          {{ partial "header.html" . }}
+        </div>
+        <header class="post-header">
+          <h1 class="taxonomy-term">{{ .Title }}</h1>
+        </header>
+        {{ if not .Params.hideContents}}
+            <div class="contents">
+              <span class="content-title">Contents</span>
+              <a class="hide-tool" href="#" onclick="toggleContents(event)" class="hide">[Toggle]</a>
+              <div id="content-body">
+                <nav id="TableOfContents">
+                  <ol>
+                    {{ range (.Site.RegularPages.GroupByDate "2006") }}
+                    <li><a href="#{{ .Key }}">{{ .Key }}</a></li>
+                    {{ end }}
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          {{ end }}
+        <div id="posts-list">
+          {{ range (.Site.RegularPages.GroupByDate "2006") }}
+          <section>
+            <h2 class="site-date-catalog" id={{ .Key }}>{{ .Key }}</h2>
+
+            {{ range .Pages }}
+            <div class="row posts-line">
+              <div class="posts-date col-xs-3 col-sm-2">
+                <time datetime="{{ .Date.Format "2006-01-02 15:04:05 MST" }}">{{ .Date.Format "Jan 02"}}</time>
+              </div>
+              <div class="posts-title col-xs-9 col-sm-10">
+                <div class="row">
+                  <div class="col-xs-11 col-sm-10">
+                    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                  </div>
+                  <div class="col-xs-1 col-sm-2 posts-categories">
+                    {{ range .Params.categories }}
+                    <div class="posts-category">
+                      <a href="/categories/{{ lower . }}/"><strong>{{ . }}</strong></a>
+                    </div>
+                    {{ end }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {{ end }}
+          </section>
+          {{ end }}
+        </div>
+
+        {{ partial "footer.html" . }}
+      </div>
+    </div>
+  </article>
+
+  {{ partial "scripts.html" . }}
+</body>
+
+</html>

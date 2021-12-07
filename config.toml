@@ -43,14 +43,18 @@ extraHead = '<script src="/js/tools.js"></script>'
 # postHeaderContent = "a"
 # postFooterContent = "<br/><br/><p>Subscribe to：<a target='_blank' href='https://mailchi.mp/a1a0d59e7a19/joway'>Joway's Blog</a></p>"
 
-
 [[params.footers]]
-name = "草稿本"
-link = "https://yizhishuijiao.wordpress.com"
+name = "Archives"
+link = "/archives"
+insite = true
 
-[[params.footers]]
-name = "RSS"
-link = "/index.xml"
+# [[params.headers]]
+# name = "Github"
+# link = "https://github.com/yzsj98"
+
+# [[params.footers]]
+# name = "RSS"
+# link = "/index.xml"
 
 [[params.footers]]
 name = "Github"
@@ -59,4 +63,8 @@ link = "https://github.com/yzsj98"
 [[params.footers]]
 name = "Twitter"
 link = "https://twitter.com/yizhishuijiao"
+
+[[params.footers]]
+name = "草稿本"
+link = "https://yizhishuijiao.wordpress.com"
 

@@ -1,8 +1,8 @@
 ---
-title: "Hello, World!"
+title: "博客测试"
 date: 2021-12-04T00:54:32+08:00
 math: true
-hide: false
+hide: true
 comment: true
 categories: ['Daily']
 ---
