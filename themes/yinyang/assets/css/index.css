@@ -324,7 +324,7 @@ article div.highlight {
   width: 100%;
   position: absolute;
   bottom: 0;
-  background: white;
+  /* background: white; */
 }
 
 @media screen and (max-width: 600px) {
