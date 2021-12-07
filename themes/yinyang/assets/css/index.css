@@ -64,8 +64,7 @@ a:hover {
 .markdown-body code {
   padding: 0.2em 0.4em;
   font-size: 85%;
-  background-color: #e2e2e2;
-  background-color: #f6f8fa;
+  background-color: #ededef;
   display: inline-block;
   border-radius: 5px;
 }
@@ -73,7 +72,7 @@ a:hover {
 /* reset code */
 
 .markdown-body pre {
-  background-color: #e2e2e2!important;
+  background-color: #ededef!important;
 }
 .markdown-body pre > code {
   padding: 0;
@@ -331,7 +330,7 @@ article div.highlight {
   text-align: center;
   margin-bottom: 20px;
   height: 80px;
-  background-color: #f6f8fa;
+  background-color: #ededef;
   border-radius: 5px;
   padding: 0.4em 0.8em;
 }
