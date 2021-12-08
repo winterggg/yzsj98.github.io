@@ -33,7 +33,8 @@ theme = 'yinyang'
 [params]
 headTitle = "YZSJ's Notes"
 mainSections = ["posts"]
-description = "Hello, I am yzsj98"
+# description = "Hello, I am yzsj98"
+description = "余生很长，无须慌张"
 zoomImage = true
 disqus = 'yizhishuijiao'
 favicon = 'https://www.yizhishuijiao.com/favicon.ico'
