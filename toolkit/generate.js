@@ -45,7 +45,7 @@ const makePage = (() => {
   const template = minify.html(templateRaw);
   return ({ isMarkdown, path: rpath, title, description = "", content }) => {
     if (isMarkdown) {
-      content = `<article><h1>${title}</h1>${marked(content)}</article>`;
+      content = `<article><h1>${title}</h1>${marked.parse(content)}</article>`;
       content = minify.htmlMd(content);
     } else {
       content = minify.html(content);
