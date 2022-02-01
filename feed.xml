@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+      <rss version="2.0">
+        <channel>
+          <title>yzsj98's blog</title>
+          <link>https://www.yizhishuijiao.com</link>
+          <description>yzsj98's blog</description>
+          
+          <item>
+            <title>Jeeplus 破解手札与 Java 反射</title>
+            <description>顺便复习了下反射知识</description>
+            <link>https://www.yizhishuijiao.com/post/202202011425</link>
+          </item>
+          
+          <item>
+            <title>New Post Template</title>
+            <description>The post description</description>
+            <link>https://www.yizhishuijiao.com/post/202201312300</link>
+          </item>
+          
+        </channel>
+      </rss>
