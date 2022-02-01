@@ -1,4 +1,4 @@
-name: hugo deploy
+name: blog deploy
 
 on:
   push:
@@ -16,14 +16,18 @@ jobs:
           submodules: true  # Fetch Hugo themes (true OR recursive)
           fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
 
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
         with:
-          hugo-version: '0.85.0'
-          # extended: true
+          node-version: '14'
+
+      # 安装依赖
+      - name: Install dependencies
+        run: |
+          yarn install --prefer-offline --frozen-lockfile
 
       - name: Build
-        run: hugo --minify
+        run: yarn generate
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
