@@ -7,17 +7,19 @@ title: About
 
 - 虚心学习，每天进步一点点。
 
-## Contact
+## 联系方式
 
-| Type           | Name                                            |
-| -------------- | ----------------------------------------------- |
-| GitHub         | [yzsj98](https://github.com/yzsj98)             |
+| 类型   | 地址                                |
+| ------ | ----------------------------------- |
+| GitHub | [yzsj98](https://github.com/yzsj98) |
 
 
-## Links
+## 友链
 
-| Name    | Address                            |
-| ------- | ---------------------------------- |
+| 名称                                      | 说明   |
+| ----------------------------------------- | ------ |
+| [Elliot's Blog ](https://www.elliotx.cc/) | 川老师 |
+| [RookieYin's Note](http://pengyin.site/)  | 彭神   |
 
 
 ## License
