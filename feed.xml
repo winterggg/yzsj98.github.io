@@ -12,9 +12,15 @@
           </item>
           
           <item>
+            <title>论文笔记-从 JPEG 中学习</title>
+            <description>利用图像DCT系数作为空间特征训练卷积神经网络。</description>
+            <link>https://www.yizhishuijiao.com/post/202105260913</link>
+          </item>
+          
+          <item>
             <title>New Post Template</title>
             <description>The post description</description>
-            <link>https://www.yizhishuijiao.com/post/202201312300</link>
+            <link>https://www.yizhishuijiao.com/post/201901010000</link>
           </item>
           
         </channel>

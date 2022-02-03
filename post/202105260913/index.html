@@ -1,0 +1,46 @@
+<!DOCTYPE html><head><title>论文笔记-从 JPEG 中学习 - yzsj98's blog</title><meta name="description" content="利用图像DCT系数作为空间特征训练卷积神经网络。"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>论文笔记-从 JPEG 中学习</h1><p>这几天看了一些利用图像 DCT 系数作为空间特征训练卷积神经网络的论文，感觉挺好玩的，这里这里做一下整理总结。</p><h2 id="jpeg-算法">JPEG 算法</h2><p>本节主要参考维基百科[4]和该系列博客[8]。</p><p>联合图像专家小组（英语：Joint Photographic Experts Group，缩写：JPEG）[4]是一种针对照片影像而广泛使用的有损压缩标准方法。使用 JPEG 格式压缩的图片文件一般也被称为 JPEG Files，最普遍被使用的扩展名格式为<code>.jpg</code>，其他常用的扩展名还包括<code>.jpeg</code>、<code>.jpe</code>、<code>.jfif</code>以及<code>.jif</code>。</p><p>JPEG/JFIF 是互联网上最普遍的被用来存储和传输彩色照片的格式。</p><p>JPEG 编码的主要流程如下图所示。从图中可以看出，在 JPEG 编码中， <code>RGB</code>格式的图像首先会被转换成<code>YCbCR</code>色彩空间，随后，图像的每个通道会分别进行不同的下采样。采样完成后接着进行量化的 DCT 计算得到量化的 DCT 系数，最终使用霍夫曼编码对数据进行无损压缩。</p> <img src="/res/20210526125855_07a3052ee543462e47c469104aab28a2.png"><p>以 24bits/pixel 的彩色图片为例，具体来说，一个常见的 JPEG 算法过程分为 7 过程：色彩空间转换（Color space transformation、降采样（Downsampling）、区块分割（Block splitting）、离散余弦变换（Discrete cosine transform）、量化（Quantization）、熵编码（Entropy coding）和解码（Decoding）。</p><h3 id="色彩空间转换（color-space-transformation）---无损">色彩空间转换（Color space transformation） - 无损</h3><p>这一步的主要目的是把原始图像的色彩空间从 <code>RGB</code> 转换为 <code>YCbCr</code>。</p><p>所谓<code>颜色空间</code>，是指表达颜色的数学模型[5]。 <code>YCbCr</code> 模型广泛应用在图片和视频的压缩传输中，<code>Y</code>表示亮度(Luminance)，<code>Cb</code>和<code>Cr</code>分别表示绿色和红色的<code>色度成分 chroma components</code>。对于人眼来说，图像中明暗的变化更容易被感知到，这是由于人眼的构造引起的。视网膜上有两种感光细胞，能够感知亮度变化的视杆细胞，以及能够感知颜色的视锥细胞，由于视杆细胞在数量上远大于视锥细胞，所以我们更容易感知到明暗细节。</p><p>这两种色彩空间的示意图如下：</p><p><code>RGB</code> 色彩空间：</p> <img src="/res/20210524093258_f0d2369cecb7bbcfcc28f4e11b035cc1.png"/><p><code>YCbCr</code> 色彩空间：</p> <img src="/res/20210524093338_4808368ab601724c80d948867fd06878.png"/><p>可以明显看到，亮度图的细节更加丰富。而 JPEG 算法的主要思想，就是在尽可能保留 Y 通道的前提下，大幅度压缩色度通道，即 JPEG 把图像转换为 <code>YCbCr</code> 之后，就可以针对数据的重要程度的不同做不同的处理。这也是为什么 JPEG 使用这种颜色空间的原因。</p><p>从 <code>RGB</code> 到 <code>YCbCr</code> 的一个转换计算公式如下：</p> <img style="width: 400px" src="/res/20210526131906_b0fd9e64621c3082f068bda6e9fb9450.png"><h3 id="降采样（downsampling）---有损">降采样（Downsampling） - 有损</h3><p>这一步又称为 <code>色度抽样</code> [6]。简单来说也是根据<code>人类视觉系统（HVS）</code>的特性，对亮度和色度进行不同策略的采样，一般来说，会对亮度不采样而对色度大幅采样。</p> <img src="/res/20210524094230_5e720211d734ea87a697ac865300c7a8.png"/><p>如上图，抽样系统中通常用一个三分比值 <code>J:a:b</code> 来表示某个方案。JPEG 中最常用的是 <code>4:2:0</code>：</p><ul><li><em>J</em>：水平抽样总数，通常为4。</li><li><em>a</em>：第一行中的抽样数目。</li><li><em>b</em>：第二行中的额外抽样数目。</li></ul><h3 id="区块分割（block-splitting）---无损">区块分割（Block splitting） - 无损</h3><p>完成色度抽样后，随后将每个通道分割成 <code>8×8</code> 块。根据不同大小色度抽样产生不同大小的最小编码单元块（MCU）。其中 <code>8×8</code> 的选取是依据经验，在计算复杂度和算法效果中均衡得出的。</p><p>至于边界处理，有一些边界填充技术。</p><h3 id="离散余弦变换（discrete-cosine-transform）---无损">离散余弦变换（Discrete cosine transform） - 无损</h3><p>完成区块分割后，接着把分割出来的每一个 <code>8×8</code> 的子区域，使用二维的离散余弦变换（DCT）转换到频率空间。离散余弦变换[7]类似于离散傅里叶变换，但是只使用实数，相当于一个长度大概是它两倍的离散傅里叶变换。</p><p><code>DCT</code> 是 JPEG 算法的核心。1807 年，39 岁的傅里叶在他的一篇论文里提出了一个想法，他认为<strong>任何周期性的函数，都可以分解为为一系列的三角函数的组合</strong>。而对于离散的数据而言，如果离散的输入数据是对称的话，那么傅里叶变化出来的函数只含有余弦项，这种变换称为离散余弦变换。也就是说，经过 <code>DCT</code> 变换，可以把一个数组分解成数个数组的和，如果我们数组视为一个一维矩阵，那么可以把结果看做是一系列矩阵的和。</p><p>对于彩色图像而言，每一个 <code>8×8×3</code> 的输入矩阵，经过一个二维 DCT 变换后，得到 <code>8×8×3</code> 的输出，也就是 DCT 系数。</p><p>下图是 64 个基本余弦波，这64个余弦波，可以组合成任意 8*8 的图形。我们只要用系数（系数表示每个单独的余弦波对整体图像所做的贡献）对这64个余弦波进行加权，就可以表示出任何的图形。</p> <img style="width: 400px" src="/res/20210526135110_aa4a916cba11d10f74690ee9de740856.png"><p>以最常用的 DCT-II 公式为例，其计算公式如下：</p><p>对于一个二维的图像输入 I，位置 <code>i, j</code> 的 DCT 系数计算公式如下： <img style="width: 400px" src="/res/jpeg-1.png"></p><p>DCT 逆的公式如下：</p> <img style="width: 400px" src="/res/jpeg-2.png"><p>根据公式，可以轻松地用 Numpy 实现，代码如下：</p><pre><code class="language-python"># 系数矩阵
+def normalize(N):
+    n = np.ones((N, 1))
+    n[0, 0] = 1 / np.sqrt(2)
+    return (n @ n.T)
+
+# 基本余弦波
+def harmonics(N):
+    spatial = np.arange(N).reshape((N, 1))
+    spectral = np.arange(N).reshape((1, N))
+
+    spatial = 2 * spatial + 1
+    spectral = (spectral * np.pi) / (2 * N)
+
+    return np.cos(spatial @ spectral)
+
+def dct(im):
+    N = im.shape[0]
+
+    n = normalize(N)
+    h = harmonics(N)
+
+    coeff = (1 / np.sqrt(2 * N)) * n * (h.T @ im @ h)
+
+    return coeff
+
+
+def idct(coeff):
+    N = coeff.shape[0]
+
+    n = normalize(N)
+    h = harmonics(N)
+
+    im = (1 / np.sqrt(2 * N)) * (h @ (n * coeff) @ h.T)
+
+    return im
+</code></pre><p>这里给出两个计算例子：</p><ol><li><p>全为 100 的矩阵：</p> <img style="max-width:50%" src="\res\20210529104451_f1f626134610e5d1795f77bc7c496867.png"></li><li><p>更通常的例子（取自维基百科[2]）：</p> <img style="max-width:50%" src="\res\20210529104601_91fc7d7f51e13dd2bedab5d536b29241.png"></li></ol><p>可以看到，数据经过DCT变化后，被明显分成了直流分量和交流分量两部分。图中，左上部分低频区的系数比较大，右下高频区的系数较小。鉴于人眼对高频区的识别不敏感，所以在下面量化部分可以舍弃一些高频区的数据。这里的 DCT 变化还没开始压缩。</p><h3 id="量化（quantization）---有损">量化（Quantization） - 有损</h3><p>在 DCT 变化后，舍弃高频区数据的过程称为量化。JPEG 算法提供了两张标准的量化系数矩阵，分别用于处理亮度数据 Y 和色差数据 Cr 以及 Cb 。</p> <img style="max-width:50%" src="\res\20210526135623_1275732481e8c4495acdd6ded5294fd8.png"><p>上表分别为亮度量化表和色彩量化表，表示 50% 的图像质量。这两张表中的数据基于人眼对不同频率的敏感程度制定的。</p><p>量化表是控制 JPEG 压缩比的关键，可以根据输出图片的质量来自定义量化表，通常自定义量化表与标准量化表呈比例关系，表中数字越大则质量越低，压缩率越高。Photoshop 有 12 张量化表。</p><p>量化时，用前面的量化矩阵与 DCT 矩阵逐项相除并取整。</p><p>量化是有损的，在解码时，反量化会乘回量化表的相应值。由于存在取整，低频段会有所损失，高频段的0字段则会被舍弃，最终导致图像质量降低。</p><h3 id="熵编码（entropy-coding）---无损">熵编码（Entropy coding） - 无损</h3><p>得到量化后的矩阵就要开始编码压缩过程了，首先要把二维矩阵变为一维数组，这里采用了 zigzag 排列，将相似频率组在一起：</p> <img style="max-width:50%" src="\res\20210526135913_288980dc72797c95c0c1d665a6f0c4fa.png"><p>这么做的目的只有一个，就是尽可能把 0 放在一起，由于 0 大部分集中在右下角，所以才去这种由左上角到右下角的顺序。</p><p>最后对得到的整数数组进行哈夫曼压缩，得到最终的压缩数据，压缩详细过程略，注意哈夫曼压缩本身是无损的。</p><h3 id="解码（decoding）">解码（Decoding）</h3><p>解码来显示影像，把以上所有操作反过来走一遍就好了。</p><h2 id="使用-jpeg-编码的频域学习">使用 JPEG 编码的频域学习</h2><p>现在大部分基于图像的任务，都是通过 RGB 图像进行学习，也就是空域。而频域学习的意思就是将 RGB 图像变换到频域（例如 DCT ），然后在频域空间上进行学习。</p><p>Faster Neural Networks Straight from JPEG[1]用 ResNet50 在大的分类数据集 ImageNet 上做了许多频域学习的实验。</p><p>对于数据集中 JPEG 格式的图像，本文魔改了 <code>libjpeg</code> 库，丢掉了 JPEG 解码的最后一步计算，直接从原始图像得到 DCT 系数，然后直接输入卷积神经网络中。</p> <img style="max-width:50%" src="\res\20210526141157_2684159037361de6f8be9dd4d52df8ff.png"><p>如果输入图像大小为 <code>224×224</code>，分为 <code>8×8</code> 的组块，一共 <code>28×28</code> 个块，输出 <code>28×28</code> 个系数矩阵。把相同频率（即系数矩阵相同位置）的系数按照位置关系放到同一个 channel 中，这样就得到了大小为 <code>28×28</code>，channel 数为 <code>8×8×3=192</code> 的 feature map。</p><p>本文作者指出，该过程实际上等价于一个卷积操作，kernel size 为 <code>8×8</code> ，stride 为 <code>8×8</code>，输入 channel 数为 1，输出 channel 数为64 。只不过卷积的参数不用学习，是先验的。而且卷积过滤器是正交的，参数化学习很难学到同样特性的过滤器参数。</p><p>当然，为了适应新的输入，需要对原有的卷积神经网络的前几层进行少量的修改。经过测试，这篇文章的方法更快且精度更高，在达到同样精度的情况下能够比 Resnet50 基线快 1.77 倍。</p><h2 id="基于学习的通道筛选">基于学习的通道筛选</h2><p>Learning in the Frequency Domain[3] 是达摩院发表在 CVPR 2010 的一项工作。提出的方法和 Faster Neural Networks Straight from JPEG[1]基本一样，主要贡献是在实例分割上做了些实验，验证了频域学习在实例分割任务上同样有效。另一个贡献就是提出了一个基于学习的通道选择，实验验证在 ImageNet 分类任务中，能够修剪多达 87.5% 的频率信道，而没有精度下降。</p> <img style="max-width:50%" src="\res\20210526154320_76c6ec29d7307fa7762e747ec614becc.png"><p>上图就是这篇文章提出的 gate 模块，实现基于学习的频率通道选择。因为不同的通道代表了不同的频率，而有些频率（主要是高频）对于图像分类和实例检测任务的精度贡献有限，所以可以删除一些通道而不会影响模型精度。本文的 gate 模块对每一个频率通道置顶了一个二元评分，0 表示丢掉，1表示保留。这样做的结果就是输入数据的大小大幅减少，降低了计算复杂度和通信带宽。该门模块很简单，可以作为模型的一部分，应用于在线推理中。</p><p>具体的，输入张量的形状为 <code>H×W×C</code> ，经过平均池化得到形状为 <code>1×1×C</code> 的张量 2 。随后再经过 <code>1×1</code> 的卷积得到形状为 <code>1×1×C</code> 的张量 3 。从张量 1 到张量 3 的部分实际上是一个两层的 squeeze-and-excitation block(SE-Block)，SE-Block 利用通道信息来强调信息量大的特征并抑制信息量小的特征。然后将张量 3 与两个可学习的参数相乘得到形状为 <code>1×1×C×2</code> 的张量 4，在推断阶段，张量 4 每一个通道的两个数归一化后作为选择该通道的概率，在 Bernoulli 分布中采样进行选择。</p><p>又因为 Bernoulli 采样是不可微的，不能反向传播，所以需要一些数学近似。这篇文章使用的方法是 Gumbel Softmax trick，使得 Bernoulli 采样可以反向传播训练。</p><p>实验略。</p><h2 id="总结">总结</h2><p>频域学习的优点：</p><ol><li>图像处理更高效：直接魔改 libjpeg 包就能从原始 jpg 图像中直接得到图形输入，减少了转换为 RGB 色彩空间的开销。</li><li>模型训练，推断更快：首先是 JPEG 算法本身就是一个有损图像压缩算法，所以输入带宽和计算开销变小了，其次是空域学习相当于给 CNN 前几层引入了一个很强的先验知识（直接定好的参数），所以让模型训练更容易。</li><li><del>光明正大的作弊，更大的输入尺寸。</del></li></ol><h2 id="change-log">Change log</h2><ol><li>2021年5月26日 09 点 编写目录；</li><li>2021年5月26日 10 点 看完博客，写了点；</li><li>2021年5月26日 17 点 看了会儿论文，写了点；</li><li>2021年5月29日 加了 DCT 公式和代码实现。</li></ol><h2 id="参考文献">参考文献</h2><pre><code>[1]: L. Gueguen, A. Sergeev, B. Kadlec, R. Liu, and J. Yosinski, “Faster Neural Networks Straight from JPEG,” in Advances in Neural Information Processing Systems, 2018, vol. 31. [Online]. [Available](https://proceedings.neurips.cc/paper/2018/file/7af6266cc52234b5aa339b16695f7fc4-Paper.pdf)
+[2]: [JPEG#Discrete_cosine_transform](https://en.wikipedia.org/wiki/JPEG#Discrete_cosine_transform)
+[3]: K. Xu, M. Qin, F. Sun, Y. Wang, Y.-K. Chen, and F. Ren, “Learning in the Frequency Domain,” Feb. 2020, Accessed: May 17, 2021. [Online]. [Available](https://arxiv.org/abs/2002.12416v4)
+
+[4]: [JPEG - 维基百科，自由的百科全书](https://zh.wikipedia.org/zh/JPEG)
+[5]: [色彩空間- 维基百科，自由的百科全书](https://zh.wikipedia.org/zh-hans/色彩空間)
+[6]: [色度抽样- 维基百科，自由的百科全书](https://zh.wikipedia.org/zh/色度抽样)
+[7]: [离散余弦变换- 维基百科，自由的百科全书](https://zh.wikipedia.org/zh/离散余弦变换)
+[8]: [JPEG 算法解密](https://thecodeway.com/blog/?p=69)
+</code></pre></article></main>
