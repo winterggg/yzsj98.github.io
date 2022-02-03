@@ -1,6 +1,6 @@
 ```
 name: about
-title: About
+title: 关于
 ```
 
 - `yzsj98` 的个人博客。
@@ -16,10 +16,11 @@ title: About
 
 ## 友链
 
-| 名称                                      | 说明   |
-| ----------------------------------------- | ------ |
-| [Elliot's Blog ](https://www.elliotx.cc/) | 川老师 |
-| [RookieYin's Note](http://pengyin.site/)  | 彭神   |
+| 名称                                      | 描述                   | 备注                                                         |
+| ----------------------------------------- | ---------------------- | ------------------------------------------------------------ |
+| [Elliot's Blog ](https://www.elliotx.cc/) | 不满,是向上的车轮。    | 川老师                                                       |
+| [RookieYin's Note](http://pengyin.site/)  | -                      | 彭神                                                         |
+| [XPoet's Blog](https://xpoet.cn/)         | 懒惰是程序员第一生产力 | [hexo-theme-keep](https://github.com/XPoet/hexo-theme-keep) 作者 |
 
 
 ## License
