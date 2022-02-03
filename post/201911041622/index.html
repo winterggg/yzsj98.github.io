@@ -1,0 +1,14 @@
+<!DOCTYPE html><head><title>Grub 报错 unknown filesystem 的修复 - yzsj98's blog</title><meta name="description" content="再用双系统我是狗"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>Grub 报错 unknown filesystem 的修复</h1><p>本文记录了下在安装 <code>Manjaro</code> 的基础上安装 <code>Windows 10</code> 而导致的 <code>grub</code> 引导失败报 <code>unknown filesystem</code> 的修复过程。</p><h2 id="tldr">TL;DR</h2><p><strong>适用于 UEFI ！！！</strong></p><p><code>grub rescue</code></p><pre><code>迭代 ls 找到 manjaro 所在的分区 (hdx,gptx)
+set prefix=(hdx,gptx)/boot/grub
+set root=hdx,gptx
+insmod normal
+normal
+</code></pre><p><code>进入系统后</code></p><pre><code class="language-bash">mount | grep /boot/efi # 找到 efi 所在分区 /dev/sdax
+sudo update-grub
+sudo grub-install /dev/sdax
+</code></pre><p>完结撒花！</p><h2 id="问题描述">问题描述</h2><p>因为种种原因，需要在笔记本上临时装个 <code>Win10</code>。于是找到启动盘，安装镜像，一顿操作后重启。发现居然直接进了 <code>Win10</code> ，隐约感觉有点不对劲，但忍住疑惑开始边进行繁琐的 <code>Win10</code> 配置， 边观看世界赛半决赛 T1 vs G2。配置的差不多后重启进入 <code>Manjaro</code> 却悲剧了。告诉我引导失败，报了 <code>unknown filesystem</code>，并贴心的进入了 <code>grub rescue</code> 模式。这时反应过来可能是安装工具改了磁盘挂载导致 <code>grub</code> 加载失败。</p><h2 id="解决">解决</h2><h3 id="grub-运行模式">Grub 运行模式</h3><p><code>Grub</code> 有两种运行模式， <code>normal</code> 和 <code>rescue</code> ，<code>normal</code> 就是正常情况下那个包含了菜单界面的模式，而当 <code>grub</code> 发现错误时，就会进入 <code>rescue</code> 模式</p><p><code>rescue</code> 的常用命令如下：</p><table><thead><tr><th align="center"></th><th align="center">说明</th></tr></thead><tbody><tr><td align="center">set</td><td align="center">查看、编辑环境变量</td></tr><tr><td align="center">ls</td><td align="center">查看分区信息</td></tr><tr><td align="center">insmod</td><td align="center">加载模块</td></tr></tbody></table><h3 id="修复-grub-配置">修复 <code>grub</code> 配置</h3><ol><li>使用 <code>ls</code> 命令，列出所有分区。</li><li>依次使用 <code>ls (分区)/</code> 命令，直到分区可读且列出了 <code>Manjaro</code> 的 <code>/</code> 为止。记下根目录所在分区 <code>(hdx,gptx)</code>。</li><li>输入 <code>set prefix=(hdx,gptx)/boot/grub</code> 和 <code>set root=hdx,gptx</code>，更改环境变量 <code>prefix</code> 和 <code>root</code>。</li><li>执行 <code>insmod normal</code> 载入 <code>normal</code> 模块</li><li>执行 <code>normal</code> 进入 normal 模式，此时应该可以正常引导进入 <code>Manjaro</code>.</li></ol><h3 id="（可选）控制台模式">（可选）控制台模式</h3><p>该小节来自网络，没有尝试过</p><pre><code>进入普通模式，出现菜单，如果加载grub.cfg（错误的）可能出现问题，按shift可以出现菜单，之后按c键进入控制台
+</code></pre><p>进入正常模式后就会出现<code>grub&gt;</code>这样的提示符，在这里支持的命令就非常多了。</p><p>引导系统</p><pre><code>set root=(hd0,msdos1)  #设置正常启动分区
+linux /boot/vmlinuz ....  ro text root=/dev/sda1  #加载内核，进入控制台模式
+initrd  /boot/initrd ....  #加载initrd.img
+boot #引导
+</code></pre><h3 id="更新-grub">更新 <code>grub</code></h3><p>进入系统后，打开终端：</p><ol><li>执行 <code>mount | grep /boot/efi</code>，记下 <code>efi</code> 分区的位置 <code>/dev/sdax</code></li><li>执行 <code>sudo update-grub</code> ，该操作会自动检测安装的操作系统，更新 <code>grub</code> 菜单。</li><li>执行 <code>sudo grub-install /dev/sdax</code>，重新安装。</li></ol></article></main>
