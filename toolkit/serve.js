@@ -1,6 +1,6 @@
 "use strict";
 
-const port = 4000;
+const port = 5001;
 const mime = { html: "text/html;charset=utf8", js: "text/javascript" };
 const fs = require("fs");
 const r2a = require("path").join.bind(null, __dirname, "../public");

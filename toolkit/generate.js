@@ -123,9 +123,9 @@ const posts = [];
     });
     // Check filename
     const prefix = meta.id.slice(0, 8) + "-" + meta.id.slice(8);
-    console.log(`${prefix} ${meta.title}.md`)
     if (fileName !== `${prefix} ${meta.title}.md`) {
       console.warn(`post file [ ${fileName} ] has incorrect name`);
+      console.warn(`${prefix} ${meta.title}.md`)
     }
   });
   posts.sort((post1, post2) => post2.id - post1.id);
@@ -149,7 +149,7 @@ const pages = [];
 // Pages - Home
 {
   const group = [];
-  const volume = 10;
+  const volume = 5;
   for (let i = 0; i < posts.length; i += volume) {
     group.push(posts.slice(i, i + volume));
   }
