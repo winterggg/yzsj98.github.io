@@ -1,0 +1,70 @@
+<!DOCTYPE html><head><title>Leetcode 209 的 'inplace' 解法 - yzsj98's blog</title><meta name="description" content="利用位运算充分利用冗余空间的奇淫巧计。"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>Leetcode 209 的 'inplace' 解法</h1><p>今天刷题时遇到了一个很有趣的题解，分享出来。</p><p>题目的链接是 <a href="https://leetcode-cn.com/problems/squares-of-a-sorted-array/">977. 有序数组的平方</a>，难度为 Easy。</p><pre><code>给你一个按非递减顺序排序的整数数组 `nums`，返回每个数字的平方组成的新数组，要求也按非递减顺序排序。
+
+1 &lt;= nums.length &lt;= 10^4
+-10^4 &lt;= nums[i] &lt;= 10^4
+</code></pre><p>题目本身很简单，大致有两种解题方法：</p><p>最简单的是平方后排序，时间复杂度O(nlogn)：</p><pre><code class="language-java">public int[] sortedSquares(int[] nums) {
+    for (int i = 0; i &lt; nums.length; ++i) {
+        nums[i] = nums[i] * nums[i];
+    }
+    Arrays.sort(nums);
+    return nums;
+}
+</code></pre><p>另外一种解法是双指针法，空间复杂度 O(n)，时间复杂度 O(n)：</p><pre><code class="language-java">public int[] sortedSquares(int[] nums) {
+    final int len = nums.length;
+    final int[] result = new int[len];
+    for (int i = 0; i&lt;len; ++i) {
+        nums[i] *= nums[i];
+    }
+    int lo = 0;
+    int hi = len - 1;
+    int j = hi;
+    while (lo &lt;= hi) {
+        if (nums[lo] &gt; nums[hi]) {
+            result[j--] = nums[lo];
+            ++lo;
+        } else {
+            result[j--] = nums[hi];
+            --hi;
+        } 
+    }
+    return result;
+}
+</code></pre><h2 id="就地解法">就地解法</h2><p>那问题来了，这道题有没有<strong>就地解法</strong>呢？也就是空间复杂度 O(1)，时间复杂度 O(n)。</p><p>答案是有的。</p><p>在使用双指针法时，该题的就地解法设计难点在于：填充数组时，左指针的数据可能会覆盖还未确定位置的右侧数据，因而必须额外新建一个数组。</p><p>不过仔细观察题目给的数据范围为 <code>-10^4 &lt;= nums[i] &lt;= 10^4</code>。因为 <code>10^4 = 0b10011100010000</code>，也就是说在取绝对值的情况下，测试数据最多占用 14 个比特位，而输入的 int 类型为 32 比特。因此，我们完全可以利用原数组项中前 16 个空闲比特位来存储交换后的值，实现 inplace 解法。用 java 实现如下：</p><pre><code>public int[] sortedSquares(int[] nums) {
+    final int len = nums.length;
+
+    // 数组取绝对值
+    for (int i = 0; i &lt; len; ++i) {
+        if (nums[i] &lt; 0) nums[i] *= -1;
+        else break;
+    }
+
+    int lo = 0;
+    int hi = len - 1;
+    int j = hi;
+    while (lo &lt;= hi) {
+        // (1)
+        if ((nums[lo] &amp; 0xFFFF) &gt; (nums[hi] &amp; 0xFFFF)) {
+            // (2)
+            nums[j--] |= (nums[lo] &amp; 0xFFFF) &lt;&lt; 16;
+            lo++;
+        } else {
+            nums[j--] |= (nums[hi] &amp; 0xFFFF) &lt;&lt; 16;
+            hi--;
+        }
+    }
+
+    for (int i = 0; i &lt; len; ++i) {
+        nums[i] &gt;&gt;= 16;
+        nums[i] *= nums[i];
+    }
+
+    return nums;
+
+}
+</code></pre><p>注意事项：</p><ol><li><p>注意优先级，(1) 处的括号不能省略；</p></li><li><p>注意对于 (2) 处的写法，通过编译生成字节码可以发现，Java编译器会先把 <code>j--</code> 存储为一个变量 t，然后再计算 <code>nums[t] |= ...</code>。即：</p><pre><code class="language-java">// 原语句：
+nums[j--] |= (nums[lo] &amp; 0xFFFF) &lt;&lt; 16;
+
+// 编译后的等价语句，其中 var5 对应于 j：
+var10001 = var5--;
+nums[var10001] |= (nums[lo] &amp; &#39;\uffff&#39;) &lt;&lt; 16;
+</code></pre></li></ol></article></main>

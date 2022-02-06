@@ -6,8 +6,14 @@
           <description>yzsj98's blog</description>
           
           <item>
+            <title>Leetcode 209 的 'inplace' 解法</title>
+            <description>利用位运算充分利用冗余空间的奇淫巧计。</description>
+            <link>https://www.yizhishuijiao.com/post/202202061418</link>
+          </item>
+          
+          <item>
             <title>Jeeplus 破解手札与 Java 反射</title>
-            <description>破解过程记录，顺便复习了下反射知识</description>
+            <description>记录一次破解过程，顺便复习了下反射知识</description>
             <link>https://www.yizhishuijiao.com/post/202202011425</link>
           </item>
           
