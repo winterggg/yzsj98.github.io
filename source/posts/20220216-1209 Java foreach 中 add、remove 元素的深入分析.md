@@ -76,7 +76,7 @@ for (String item : list) {
 }
 ```
 
-问题来了，为什么 remove “1” 正常呢？
+问题来了，为什么 remove `1` 正常而 remove `2` 异常呢？
 
 通过异常的 stack 导出 UML sequence 图如下：
 
