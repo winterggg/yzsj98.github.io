@@ -6,8 +6,14 @@
           <description>yzsj98's blog</description>
           
           <item>
+            <title>Java foreach 中 add、remove 元素的深入分析</title>
+            <description>看代码时偶尔发现的 Java 使用问题</description>
+            <link>https://www.yizhishuijiao.com/post/202202161209</link>
+          </item>
+          
+          <item>
             <title>Leetcode 209 的 'inplace' 解法</title>
-            <description>利用位运算充分利用冗余空间的巧计。</description>
+            <description>利用位运算充分利用冗余空间的巧计</description>
             <link>https://www.yizhishuijiao.com/post/202202061418</link>
           </item>
           
