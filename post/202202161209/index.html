@@ -28,7 +28,7 @@ System.out.println(list);
         list.remove(item);
     }
 }
-</code></pre><p>问题来了，为什么 remove “1” 正常呢？</p><p>通过异常的 stack 导出 UML sequence 图如下：</p> <img src="/res/2022-02-16_15-40-18.jpg"><p>可以看到，程序终止于 <code>ArrayList</code> 的 <code>Itr</code> 类 的 <code>next</code> 方法里的 <code>checkForComodification</code> 方法。</p><p>具体的，通过反编译，删除 “2” 的 case 的代码会被编译理解为如下代码：</p><pre><code class="language-java">Iterator var2 = list.iterator();
+</code></pre><p>问题来了，为什么 remove <code>1</code> 正常而 remove <code>2</code> 异常呢？</p><p>通过异常的 stack 导出 UML sequence 图如下：</p> <img src="/res/2022-02-16_15-40-18.jpg"><p>可以看到，程序终止于 <code>ArrayList</code> 的 <code>Itr</code> 类 的 <code>next</code> 方法里的 <code>checkForComodification</code> 方法。</p><p>具体的，通过反编译，删除 “2” 的 case 的代码会被编译理解为如下代码：</p><pre><code class="language-java">Iterator var2 = list.iterator();
 
 while(var2.hasNext()) {
     String item = (String)var2.next(); // 报错的函数
