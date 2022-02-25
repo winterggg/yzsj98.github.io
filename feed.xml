@@ -6,6 +6,12 @@
           <description>yzsj98's blog</description>
           
           <item>
+            <title>数据结构与算法复习小抄（持续更新）</title>
+            <description>复习、整理一些知识点</description>
+            <link>https://www.yizhishuijiao.com/post/202202231638</link>
+          </item>
+          
+          <item>
             <title>Java foreach 中 add、remove 元素的深入分析</title>
             <description>看代码时偶尔发现的 Java 使用问题</description>
             <link>https://www.yizhishuijiao.com/post/202202161209</link>
