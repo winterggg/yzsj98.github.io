@@ -1,4 +1,4 @@
-<!DOCTYPE html><head><title>数据结构与算法复习小抄（持续更新） - yzsj98's blog</title><meta name="description" content="复习、整理一些知识点"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>数据结构与算法复习小抄（持续更新）</h1><blockquote><p>数据结构复习备忘！随着复习的进行而持续更新，配套代码仓库：[todo]</p></blockquote><h2 id="changelog">Changelog</h2><ul><li>2022年2月25日 添加排序[选择、插入、归并和快速]，查找[二分查找各种变种和模板]。</li></ul><h2 id="一、排序">一、排序</h2><h3 id="11-排序工具">1.1 排序工具</h3><p>后续具体排序算法实现类的父类，主要目的是引入排序检测函数：构造一个随机大数组，以粗略验证所写排序算法是否正确：</p><pre><code class="language-java">abstract public class SortAlgoBase {
+<!DOCTYPE html><head><title>数据结构与算法复习小抄（持续更新） - yzsj98's blog</title><meta name="description" content="复习、整理一些知识点"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>数据结构与算法复习小抄（持续更新）</h1><blockquote><p>数据结构复习备忘！随着复习的进行而持续更新，配套代码仓库：<a href="https://github.com/yzsj98/AlgoStudy">AlgoStudy</a></p></blockquote><h2 id="changelog">Changelog</h2><ul><li>2022年2月25日 添加排序[选择、插入、归并和快速]，查找[二分查找各种变种和模板]。</li><li>2022年3月6日 添加堆排序。</li></ul><h2 id="一、排序">一、排序</h2><h3 id="11-排序工具">1.1 排序工具</h3><p>后续具体排序算法实现类的父类，主要目的是引入排序检测函数：构造一个随机大数组，以粗略验证所写排序算法是否正确：</p><pre><code class="language-java">abstract public class SortAlgoBase {
     public SortAlgoBase() {
         check(); // 实例化后即检测输出
     }
@@ -35,7 +35,7 @@
     }
 
     @Override
-    protected &lt;E extends Comparable&lt;E&gt;&gt; void sort(E[] arr) {
+    public &lt;E extends Comparable&lt;E&gt;&gt; void sort(E[] arr) {
         for (int i = 0; i &lt; arr.length; ++i) {
             int minIdx = i;
 
@@ -60,7 +60,7 @@
     }
 
     @Override
-    protected &lt;E extends Comparable&lt;E&gt;&gt; void sort(E[] arr) {
+    public &lt;E extends Comparable&lt;E&gt;&gt; void sort(E[] arr) {
         for (int i = 0; i &lt; arr.length; ++i) {
             // 把 arr[i] 插入到合适的位置
             for (int j = i; j - 1 &gt;= 0; j--) {
@@ -84,7 +84,7 @@
     }
 
     @Override
-    protected &lt;E extends Comparable&lt;E&gt;&gt; void sort(E[] arr) {
+    public &lt;E extends Comparable&lt;E&gt;&gt; void sort(E[] arr) {
         for (int i = 0; i &lt; arr.length; ++i) {
             // 把 arr[i] 放入到合适的位置
             E p = arr[i];
@@ -111,7 +111,7 @@
     }
 
     @Override
-    protected &lt;E extends Comparable&lt;E&gt;&gt; void sort(E[] arr) {
+    public &lt;E extends Comparable&lt;E&gt;&gt; void sort(E[] arr) {
         sort(arr, 0, arr.length - 1);
     }
 
@@ -155,7 +155,7 @@
     }
 
     @Override
-    protected &lt;E extends Comparable&lt;E&gt;&gt; void sort(E[] arr) {
+    public &lt;E extends Comparable&lt;E&gt;&gt; void sort(E[] arr) {
         sort(arr, 0, arr.length - 1);
     }
 
@@ -205,7 +205,7 @@
     }
 
     @Override
-    protected &lt;E extends Comparable&lt;E&gt;&gt; void sort(E[] arr) {
+    public &lt;E extends Comparable&lt;E&gt;&gt; void sort(E[] arr) {
         E[] aux = Arrays.copyOf(arr, arr.length);
         final int n = arr.length;
 
@@ -253,7 +253,7 @@
     }
 
     @Override
-    protected &lt;E extends Comparable&lt;E&gt;&gt; void sort(E[] arr) {
+    public &lt;E extends Comparable&lt;E&gt;&gt; void sort(E[] arr) {
         sort(arr, 0, arr.length - 1);
     }
 
@@ -333,6 +333,34 @@ private &lt;E extends Comparable&lt;E&gt;&gt; int partition(E[] arr, int l, int 
     // 此时： arr[l+1, lt-1] &lt; v, arr[lt, gt-1] = v, arr[gt, r] &gt; v
     sort(arr, l, lt - 1);
     sort(arr, gt, r);
+}
+</code></pre><h3 id="15-堆排序">1.5 堆排序</h3><p><strong>思路：</strong>就地建立最大二叉堆，然后从尾部依次添加最大值，每次拿到最大值后调整维持堆结构。</p><pre><code class="language-java">@Override
+public &lt;E extends Comparable&lt;E&gt;&gt; void sort(E[] arr) {
+    final int n = arr.length;
+
+    // 就地建立二叉堆：升序排序-&gt;最大堆，降序排序-&gt;最小堆
+    // k 初始为最后一个叶子节点的父节点
+    for (int k = (n - 1 - 1) / 2; k &gt;= 0; k--) {
+        sink(arr, k, n);
+    }
+
+
+    // 排序
+    int k = n - 1;
+    while (k &gt; 0) {
+        swap(arr, 0, k--);
+        sink(arr, 0, k);
+    }
+}
+
+private void sink(Comparable[] pq, int k, int n) {
+    while (2 * k + 1 &lt; n) { // 左节点未越界
+        int j = 2 * k + 1;
+        if (j + 1 &lt; n &amp;&amp; pq[j].compareTo(pq[j + 1]) &lt; 0) j++;
+        if (pq[j].compareTo(pq[k]) &lt;= 0) break;
+        swap(pq, k, j);
+        k = j;
+    }
 }
 </code></pre><h2 id="二、二分查找">二、二分查找</h2><h3 id="21-常规">2.1 常规</h3><p><strong>递归写法：</strong></p><pre><code class="language-java">public static &lt;E extends Comparable&lt;E&gt;&gt; int search(E[] data, E target) {
     return search(data, target, 0, data.length - 1);
