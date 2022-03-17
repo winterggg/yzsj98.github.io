@@ -14,7 +14,7 @@ let onLinkClick = function (event) {
 let onPageLoad = () => {
   (document.getElementById(location.hash.slice(1)) || topBar).scrollIntoView();
   document
-    .querySelectorAll('a[href^="/."],a[href^="#"]')
+    .querySelectorAll('a[href^="/."]')
     .forEach((element) => (element.onclick = onLinkClick));
 };
 
