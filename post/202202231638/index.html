@@ -1,4 +1,4 @@
-<!DOCTYPE html><head><title>数据结构与算法复习小抄（持续更新） - yzsj98's blog</title><meta name="description" content="复习、整理一些知识点"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>数据结构与算法复习小抄（持续更新）</h1><blockquote><p>数据结构复习备忘！随着复习的进行而持续更新，配套代码仓库：<a href="https://github.com/yzsj98/AlgoStudy">AlgoStudy</a></p></blockquote><h2 id="changelog">Changelog</h2><ul><li>2022年2月25日 添加排序[选择、插入、归并和快速]，查找[二分查找各种变种和模板]。</li><li>2022年3月6日 添加堆排序。</li></ul><h2 id="一、排序">一、排序</h2><h3 id="11-排序工具">1.1 排序工具</h3><p>后续具体排序算法实现类的父类，主要目的是引入排序检测函数：构造一个随机大数组，以粗略验证所写排序算法是否正确：</p><pre><code class="language-java">abstract public class SortAlgoBase {
+<!DOCTYPE html><head><title>数据结构与算法复习小抄（持续更新） - yzsj98's blog</title><meta name="description" content="复习、整理一些知识点"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>数据结构与算法复习小抄（持续更新）</h1><blockquote><p>数据结构复习备忘！随着复习的进行而持续更新，配套代码仓库：<a href="https://github.com/yzsj98/AlgoStudy">AlgoStudy</a></p></blockquote><h2 id="index">Index</h2><ul><li>排序：<a href="#12-%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F">选择排序</a>、<a href="#13-%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F">插入排序</a> 、<a href="#14-%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F">归并排序</a>、<a href="#15-%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F">快速排序</a>、<a href="#15-%E5%A0%86%E6%8E%92%E5%BA%8F">堆排序</a></li><li>二分查找：<a href="#221-ceil">ceil</a>、<a href="#222-upper_ceil">upper_ceil</a>、<a href="#223-lower_ceil">lower_ceil</a>、<a href="#231-floor">floor</a>、<a href="#232-lower_floor">lower_floor</a>、<a href="#233-upper_floor">upper_floor</a></li><li>树：</li><li>其他数据结构：</li></ul><h2 id="changelog">Changelog</h2><ul><li>2022年2月25日 添加排序[选择、插入、归并和快速]，查找[二分查找各种变种和模板]。</li><li>2022年3月6日 添加堆排序，优先级队列代码。</li></ul><h2 id="一、排序">一、排序</h2><h3 id="11-排序工具">1.1 排序工具</h3><p>后续具体排序算法实现类的父类，主要目的是引入排序检测函数：构造一个随机大数组，以粗略验证所写排序算法是否正确：</p><pre><code class="language-java">abstract public class SortAlgoBase {
     public SortAlgoBase() {
         check(); // 实例化后即检测输出
     }
@@ -477,4 +477,46 @@ public static &lt;E extends Comparable&lt;E&gt;&gt; int search(E[] data, E targe
     }
     return l;
 }
-</code></pre><h2 id="附、java-算法常用工具函数">附、Java 算法常用工具函数</h2><h3 id="a1-数组类">A.1 数组类</h3><h3 id="a2-集合类">A.2 集合类</h3><h3 id="a3-其他">A.3 其他</h3></article></main>
+</code></pre><h2 id="三、树">三、树</h2><h2 id="四、其他数据结构">四、其他数据结构</h2><h3 id="41-二叉堆">4.1 二叉堆</h3><p>用二叉堆可以方便的实现优先级队列。</p><pre><code class="language-java">public class MaxPQ&lt;E extends Comparable&lt;E&gt;&gt; {
+    private E[] pq;
+    private int N;
+    public MaxPQ(int cap) {pq = (E[]) new Comparable[cap];}
+    public int size() {return N;}
+    public boolean isEmpty() {return N == 0;}
+    private void swap(int i, int j) {E t = pq[i];pq[i] = pq[j];pq[j] = t;}
+
+    public void insert(E e) {
+        pq[N++] = e;
+        swim(N-1);
+    }
+
+    public E delMax() {
+        E res = pq[0];
+        swap(0, N - 1);
+        pq[N - 1] = null;
+        N--;
+        sink(0);
+        return res;
+    }
+
+    private void swim(int k) {
+        while (k &gt; 0 &amp;&amp; pq[k].compareTo(pq[(k - 1) / 2]) &gt; 0) {
+            int p = (k - 1) / 2;
+            swap(k, p);
+            k = p;
+        }
+    }
+
+    private void sink(int k) {
+        while (2 * k + 1 &lt; N) {
+            int j = 2 * k + 1;
+            if (j + 1 &lt; N &amp;&amp; pq[j + 1].compareTo(pq[j]) &gt; 0) {
+                j++;
+            }
+            if (pq[k].compareTo(pq[j]) &gt;= 0) break;
+            swap(k, j);
+            k = j;
+        }
+    }
+}
+</code></pre><h3 id="42-二叉查找树">4.2 二叉查找树</h3><h4 id="minmax">min/max</h4><h4 id="floor">floor</h4><h4 id="ceil">ceil</h4><h2 id="附、java-算法常用工具函数">附、Java 算法常用工具函数</h2><h3 id="a1-数组类">A.1 数组类</h3><h3 id="a2-集合类">A.2 集合类</h3><h3 id="a3-其他">A.3 其他</h3></article></main>
