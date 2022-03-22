@@ -693,6 +693,29 @@ public E query(int treeIndex, int l, int r, int queryL, int queryR) {
     return merger.merge(query(leftTreeIndex, l, mid, queryL, mid),
                         query(rightTreeIndex, mid + 1, r, mid+1, queryR));
 }
+</code></pre><p><strong>更新操作：</strong></p><pre><code class="language-java">public void set(int index, E e) {
+    if (index &lt; 0 || index &gt; data.length) {
+        throw new IllegalArgumentException(&quot;Index is illegal.&quot;);
+    }
+    data[index] = e;
+    set(0, 0, data.length - 1, index, e);
+}
+
+public void set(int treeIndex, int l, int r, int index, E e) {
+
+    if (l == r) {
+        tree[treeIndex] = e;
+        return;
+    }
+    int mid = l + (r - l) / 2;
+    int leftTreeIndex = leftChild(treeIndex);
+    int rightTreeIndex = rightChild(treeIndex);
+    if (index &gt;= mid + 1)
+        set(rightTreeIndex, mid + 1, r, index, e);
+    else
+        set(leftTreeIndex, l, mid, index, e);
+    tree[treeIndex] = merger.merge(tree[leftTreeIndex], tree[rightTreeIndex]);
+}
 </code></pre><p><strong>测试一下：</strong></p><pre><code class="language-java">public static void main(String[] args) {
     Integer[] nums = {-2, 0, 3, -5, 2, -1};
     SegmentTree&lt;Integer&gt; segmentTree = new SegmentTree&lt;&gt;(nums, Integer::sum);
