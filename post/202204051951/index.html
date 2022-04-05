@@ -1,0 +1,79 @@
+<!DOCTYPE html><head><title>一个模板解决二分搜索的7种变体 - yzsj98's blog</title><meta name="description" content="花时间整理了一个二分模板，（脑）空间换时间！"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>一个模板解决二分搜索的7种变体</h1><p>最近开始尝试参加 LeetCode 周赛，其中碰到一道题 <a href="https://leetcode-cn.com/problems/maximum-candies-allocated-to-k-children/">5219. 每个小孩最多能分到多少糖果</a> 需要使用二分法（可惜刷题太少了当时并没有看出这个套路）。众所周知，二分搜索法变种有很多，而写出一个正确没有 bug 的二分法还是有点难度的。又因为自己平常写二分法的时候总是需要在一些关键点上停下来思考一会儿，所有干脆花点时间整理一个涵盖所有变种的二分模板背下来，（脑）空间换时间！</p><p>直接上模板：</p><pre><code class="language-java">int l=&lt;搜索空间起点&gt;, r=&lt;搜索空间终点&gt;, t=&lt;搜索目标的值&gt;;
+while (l &lt; r) {
+    int mi = &lt;中点逻辑&gt;;
+    if (&lt;符合搜索目标&gt;) &lt;符合条件抉择&gt;;
+    else &lt;不符合条件抉择&gt;;
+}
+&lt;l的溢出判断以及目标边界判断&gt;;
+</code></pre><p>其中，尖括号包裹的内容针对不同变种有所不同。</p><p>当我们写一个二分法的时候，首先确定的是<strong>搜索目标</strong>以及<strong>目标值 t</strong>。而二分法的<strong>搜索目标</strong>可以总结为以下 7 种变体（术语按照个人喜好编的，这个不重要）：</p><ol><li>等值：最常见的，寻找目标值 t 的索引，不存在返回 -1；</li><li>ceil：上界，寻找大于 t 的最小值索引；</li><li>upper_ceil：若 t 存在，返回最大索引，若不存在，同 ceil；</li><li>lower_ceil：若 t 存在，返回最小索引，若不存在，同 ceil。注意相当于求大于等于 t 的最小值索引；</li><li>floor：下界，寻找小于 t 的最大值索引；</li><li>lower_floor：若 t 存在，返回最小索引，若不存在同 floor；</li><li>upper_floor：若 t 存在，返回最大索引，若不存在同 floor。</li></ol><p>可以看到，除了等值情况，其实就是分为了上界，下界，以及分别与等值情况结合的情况。</p><p>接下来从最常见的两个变体讲起，ceil 和 floor，即上界和下界。</p><h2 id="ceil">ceil</h2><p>对于上界 ceil 变体，其搜索目标为 <code>&gt;t的最小值索引</code>。（假设数组长度为 <code>len</code>，下同。）</p><p>其搜索空间为 <code>[0, len]</code>，搜索空间的意思是算法执行结束后返回值的范围，其端点值也就是 l 和 r 的初始值。注意这里右空间为溢出值 <code>len</code>，代表了数组中所有元素都小于 t 这样一种情况，除此之外返回值必然落在数组索引范围里。</p><p>注意循环条件：</p><pre><code class="language-java">int l=&lt;搜索空间起点&gt;, r=&lt;搜索空间终点&gt;, t=&lt;搜索目标的值&gt;;
+while (l &lt; r) {...}
+</code></pre><p>当循环退出时，<code>l == r</code>，所以终于不用思考用 l 还是用 r 啦！</p><p>至于循环体：</p><pre><code class="language-java">while (l &lt; r) {
+    int mi = &lt;中点逻辑&gt;;
+    if (&lt;符合搜索目标&gt;) &lt;符合条件抉择&gt;;
+    else &lt;不符合条件抉择&gt;;
+}
+&lt;l的溢出判断以及目标边界判断&gt;;
+</code></pre><p>首先是**&lt;中点逻辑&gt;**，这里会有两个选择（也就是上取整和下取整），具体选择哪一个稍后解释，因为这涉及到二分法的一个天坑：</p><ol><li><code>int mi = l + (r - l) / 2</code></li><li><code>int mi = l + (r - l + 1) / 2</code></li></ol><p>然后是 **&lt;符合搜索目标&gt;**，直接抄写一下条件就好了，比如这里就是 <code>arr[mi] &gt; t</code>。</p><p>那 <strong>&lt;符合条件抉择&gt;</strong> 是啥呢？可以这样想，我们要求最小值，也就是满足条件还不够，<strong>还要尽可能的小</strong>，当然也不能排除当前的 <code>mi</code>。因此这里就是 <code>r = mi</code>，让关注的区间转向往小的区间。那 <strong>&lt;不符合条件抉择&gt;</strong> 反着来就好了，这里就是 <code>l = mi+1</code>，因为当前情况需要排除，所以 mi 需要加一。回到中点逻辑的选择，这里直接给出答案，需要使用第一种，稍后解释。</p><p>最后就是 <strong>&lt;l的溢出判断以及目标边界判断&gt;</strong> 了，其实这里比较简单，跳出时只有两种情况：</p><ol><li>l 溢出，也就是 <code>l == len</code>。</li><li>l 为符合条件的正确索引。</li></ol><p>如果把溢出索引也当作正常结果，这里就可以不做任何处理，直接 return l 就好了。</p><p>组合上述抉择，最终的代码为：</p><pre><code class="language-java">int l=0, r=len, t=target;
+while (l &lt; r) {
+    int mi = l + (r - l) / 2;
+    if (arr[mi] &gt; t) r = mi;
+    else l = mi+1;
+}
+return l;
+</code></pre><h2 id="floor">floor</h2><p>有了上一节的基础，floor的分析就简单啦。先贴出代码：</p><pre><code class="language-java">int l=-1, r=len-1, t=target;
+while (l &lt; r) {
+    int mi = l + (r - l + 1) / 2;
+    if (arr[mi] &lt; t) l = mi; // (1)
+    else r = mi-1;
+}
+return l;
+</code></pre><p>floor 的搜索目标是 <code>&lt; t</code>的最大值。搜索空间变成了 <code>[-1, len-1]</code>，其中 -1 表示数组所有元素都大于 t 的情况。相应的，我们找到一个满足条件的值后还不够，还需要确保这是最大值，所以 <strong>&lt;符合条件抉择&gt;</strong> 为：<code>l = mi</code>。响应的不符合的条件也要对照着修改一下。</p><p>注意中点逻辑也改了，这里选用了第二种，也就是上取整，这是为了解决一个<strong>死循环</strong>的 bug：</p><p>比如在算法的某一步，<code>l == a</code>, <code>r == a+1</code>，如果使用第一种中点逻辑，中点 <code>mi == a</code>，而如果算法走到 (1) 处 <code>l = mi</code>，也就是 <code>l == a</code>，于是区间经过调整后，<strong>并没有发生变化</strong>，算法陷入死循环。</p><p>把中点逻辑改为上取整就是为了解决这个问题。</p><h2 id="lower_ceil-和-upper_floor">lower_ceil 和 upper_floor</h2><p>有了 lower 和 upper 的分析，这两个变种稍微修改一下就可以了。</p><p>对于 <code>lower_ceil</code>，只需要在搜索条件里加上等号即可。</p><pre><code class="language-java">int l=0, r=len, t=target;
+while (l &lt; r) {
+    int mi = l + (r - l) / 2;
+    if (arr[mi] &gt;= t) r = mi;
+    else l = mi+1;
+}
+return l;
+</code></pre><p><code>upper_floor</code> 同理：</p><pre><code class="language-java">int l=-1, r=len-1, t=target;
+while (l &lt; r) {
+    int mi = l + (r - l + 1) / 2;
+    if (arr[mi] &lt;= t) l = mi;
+    else r = mi-1;
+}
+return l;
+</code></pre><h2 id="等值">等值</h2><p>等值的话直接用市面上的二分模板就好了，不过为了省事，也可以直接用万能模板啦。</p><p>其实用两个的等值变种都可以，我一般用的是 <code>lower_ceil</code>，也就是大于等于 t 的最小值索引。</p><pre><code class="language-java">int l=0, r=len, t=target;
+while (l &lt; r) {
+    int mi = l + (r - l) / 2;
+    if (arr[mi] &gt;= t) r = mi;
+    else l = mi + 1;
+}
+return (l != len &amp;&amp; arr[l] == t) ? l : -1;
+</code></pre><p>溢出的情况说明没找到，而没溢出只能保证 l 不小于 t，需要判断是否真的相等。也就是非溢出且元素值等于 t 的情况下才说明找到了，否则返回 -1。</p><h2 id="upper_ceil-和--lower_floor">upper_ceil 和 lower_floor</h2><p>这两个变体实际用到的不多。分别可以拿到upper和floor的结果后再进行一些额外判断即可。</p><p>比如对于 <code>upper_ceil</code>：</p><pre><code class="language-java">int upper = upper(arr, t);
+if (upper-1 &gt;= 0 &amp;&amp; arr[upper - 1] == t) {
+    return upper - 1;
+}
+return upper;
+</code></pre><p>也就是判断前一个元素是否等于 t。不是的话就返回upper结果。</p><p><code>lower_floor</code> 也是类似的：</p><pre><code class="language-java">int floor = floor(arr, t);
+if (floor+1 &lt; arr.length &amp;&amp; arr[floor+1] == t) {
+    return floor+1;
+}
+return floor;
+</code></pre><h2 id="小练习">小练习</h2><p>来做个练习题吧：给定一个有序数组 <code>arr</code>，请用 <code>log(n)</code> 的时间复杂度求出其中 t 的个数。</p><p>参考答案：</p><ol><li>首先二分寻找 <strong>大于等于t的最小值索引 a</strong>，如果 <code>a==len || arr[a] != t</code> 说明 t 不存在，返回0。</li><li>否则二分寻找 <strong>大于t的最小值索引 b</strong>，返回 b-a。</li></ol><p>参考代码：</p><pre><code class="language-java">int findNum(int [] arr, int target) {
+    final int n = arr.length;
+    int l = 0, r = n, t = target;
+    while (l &lt; r) {
+        int mi = l + (r - l) / 2;
+        if (arr[mi] &gt;= t) r = mi;
+        else l = mi + 1;
+    }
+    if (l==n || arr[l] != t) return 0;
+    int left = l;
+    l = 0; r = n;
+    while (l &lt; r) {
+        int mi = l + (r - l) / 2;
+        if (arr[mi] &gt; t) r = mi;
+        else l = mi + 1;
+    }
+    return l - left;
+}
+</code></pre></article></main>
