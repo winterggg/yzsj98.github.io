@@ -1,0 +1,120 @@
+<!DOCTYPE html><head><title>快速进行 Linux 性能分析：第一分钟 - yzsj98's blog</title><meta name="description" content="翻译的一篇 Netflix 技术博客"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>快速进行 Linux 性能分析：第一分钟</h1><p>翻译的一篇 Netflix 技术博客，内容有做调整补充，<a href="https://netflixtechblog.com/linux-performance-analysis-in-60-000-milliseconds-accc10403c55">原文</a>。</p><p>另外推荐一个整理的时候发现的很棒的 <a href="https://wangchujiang.com/linux-command/">Linux 命令搜索网站</a>。</p><hr><p>当你登录到一个有性能问题的 Linux 服务器：你在第一时间会做些什么检查？</p><p>假设我们不使用任何先进的监控分析工具，而仅仅登录到一台服务器，并只使用一些内置的 Linux 性能工具。</p><h2 id="第一分钟：摘要">第一分钟：摘要</h2><p>在这篇文章中，我将向你展示如何在 60 秒内快速通过标准的 Linux 工具进行性能优化调查。在60秒内，你可以通过运行以下10条命令，对系统资源使用情况和运行中的进程有一个整体的了解。关注错误、饱和（Saturation）指标、以及资源利用率等信息。<strong>饱和</strong>是指一个资源的负载超过了它能处理的范围，可以通过请求队列的长度或等待的时间来衡量。</p><pre><code class="language-bash">uptime
+dmesg | tail
+vmstat 1
+mpstat -P ALL 1
+pidstat 1
+iostat -xz 1
+free -m
+sar -n DEV 1
+sar -n TCP,ETCP 1
+top
+</code></pre><p>注意上述一些命令可能需要安装 sysstat 包。利用上述命令暴露出的各种系统指标，我们能不断缩小诊断范围，快速定位系统的性能瓶颈。</p><p>下面通过一些实例，简单总结一下上述命令，关于这些命令的更多用法请参考相应的 man 手册。</p><h2 id="1-uptime">1. uptime</h2><pre><code class="language-bash">uptime
+23:51:26 up 21:31, 1 user, load average: 30.02, 26.43, 19.02
+</code></pre><p><strong>目的：</strong>查看Linux系统负载信息。</p><p><strong>输出信息：</strong> 现在时间、系统已经运行了多长时间、目前有多少登陆用户（总连接数而不是用户数）、系统在过去的1分钟、5分钟和15分钟内负载的移动平均数。</p><p><strong>平均负载：</strong> 系统平均负载是指在特定时间间隔内运行队列中的平均进程数。经验上来说，如果每个CPU内核的当前活动进程数不大于 3 的话，那么系统的性能是良好的。如果每个CPU内核的任务数大于5，那么这台机器的性能有严重问题。例如，如果你的 Linux 主机是双核 CPU 的话，当 Load Average 为 6 的时候说明机器已经被充分使用了。</p><p><strong>数字的意义：</strong> 我们主要关注变化量，例如，如果你要检查一个有问题的服务器，而1分钟的数值比15分钟的数值低得多，那么你可能登录得太晚，错过了这个问题。</p><p>回到上面的例子，报告显示出一个增长的趋势：1分钟值达到30，而15分钟值为19。可能有很多原因导致这种程度的增加，有可能是因为 CPU 需求增加了，这需要我们之后使用 <code>vmstat</code> 或 <code>mpstat</code> 进行进一步确认。</p><h2 id="2-dmesg--tail">2. dmesg | tail</h2><pre><code>dmesg | tail
+[1880957.563150] perl invoked oom-killer: gfp_mask=0x280da, order=0, oom_score_adj=0
+[...]
+[1880957.563400] Out of memory: Kill process 18694 (perl) score 246 or sacrifice child
+[1880957.563408] Killed process 18694 (perl) total-vm:1972392kB, anon-rss:1953348kB, file-rss:0kB
+[2320864.954447] TCP: Possible SYN flooding on port 7001. Dropping request.  Check SNMP counters.
+</code></pre><p><strong>目的：</strong>Linux 会把消息存储在一个环形缓冲区里，可以使用 dmesg 读取。如上面的例子展示了一个 OOM-KILL 和一个 TCP 请求丢弃。</p><p><strong>命令解释：</strong>查看最后 10 条系统信息。</p><p><strong>不要跳过这个步骤！dmesg 总是值得检查的。</strong></p><h2 id="3-vmstat-1">3. vmstat 1</h2><pre><code class="language-bash">vmstat 1 5
+procs ---------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+34  0    0 200889792  73708 591828    0    0     0     5    6   10 96  1  3  0  0
+32  0    0 200889920  73708 591860    0    0     0   592 13284 4282 98  1  1  0  0
+32  0    0 200890112  73708 591860    0    0     0     0 9501 2154 99  1  0  0  0
+32  0    0 200889568  73712 591856    0    0     0    48 11900 2459 99  0  0  0  0
+32  0    0 200890208  73712 591860    0    0     0     0 15898 4840 98  1  1  0  0
+</code></pre><p><strong>目的：</strong>显示虚拟内存状态。<strong>vmstat命令</strong> 的含义为显示虚拟内存状态（Viryual Memor Statics），但是它可以报告关于进程、内存、I/O等系统整体运行状态。</p><p><strong>命令解释：</strong>每个1秒输出虚拟内存状态报告，共显示 5 次。</p><p><strong>结果解释：</strong></p><ol><li><p>行信息</p><ol><li>输出第一行是从启动开始的平均值。</li><li>剩下行的是一秒内的平均值。</li></ol></li><li><p>列信息</p><ul><li><p>Procs（进程）</p><ul><li>r：运行队列中的进程数量（如果长期大于 1 意味着需要增加 CPU ）。</li><li>b：等待 IO 的进程数量。</li></ul></li><li><p>Memory（内存）</p><ul><li>swpd：使用的虚拟内存大小（如果swpd的值不为0，但是SI，SO的值长期为0，这种情况不会影响系统性能）。</li><li>free：空闲物理内存大小。</li><li>buff：缓冲的内存大小。</li><li>cache：缓存的内存大小。简单来理解，buff 区用于存储文件元数据（权限、位置等）。每个内存页面都在这里被跟踪。而 cache 用于存储实际文件内容。</li></ul></li><li><p>Swap</p><ul><li>si：每秒从交换区写到内存的大小，有磁盘调入内存。</li><li>so：每秒写入交换区的内存大小，有内存调入磁盘。</li></ul></li><li><p>IO</p><ul><li>bi：每秒读取的块数。</li><li>bo：每秒写入的块数。</li></ul></li><li><p>system</p><ul><li>in：每秒中断数，包括时钟中断。</li><li>cs：每秒上下文切换次数。</li></ul></li><li><p>CPU</p><ul><li><p>us：用户进程执行时间（user time）百分比。</p><p>us的值比较高时，说明用户进程消耗的 CPU 时间多，但是如果长期超 50% 的使用，那么我们就该考虑优化程序算法或者进行加速。</p></li><li><p>sy：内核系统进程执行时间（system time）百分比</p><p>sy 的值高时，说明系统内核消耗的 CPU 资源多，这并不是良性表现，我们应该检查原因。</p></li><li><p>wa: IO 等待时间百分比</p><p>wa 的值高时，说明IO等待比较严重，这可能由于磁盘大量作随机访问造成，也有可能磁盘出现瓶颈（块操作）。</p></li><li><p>id：空闲时间百分比</p></li></ul></li></ul></li></ol><p>us 加上 sy 可以判断 CPU 是否繁忙。wa 一直不变可能说明磁盘是性能瓶颈，此时 CPU 因为任务在阻塞等待 IO 而空闲下来。你可以把 wa 看作空闲时间的另一种形式，只不过说明了为何而空闲。</p><p>IO 处理需要消耗系统时间。如果平均系统时间很高，如超过20%，就值得进一步探究：也许内核正在低效的处理 IO。</p><p>回到上面的例子，CPU 时间几乎完全用在用户级，也就是应用程序本身在大量占用 CPU 时间。CPU 利用率也远超 90%，但这不一定是一个问题。 最后，我们通过 r 列观察饱和程度。</p><h2 id="4-mpstat--p-all-1">4. mpstat -P ALL 1</h2><pre><code>mpstat -P ALL 1
+Linux 3.13.0-49-generic (titanclusters-xxxxx)  07/14/2015  _x86_64_ (32 CPU)
+
+07:38:49 PM  CPU   %usr  %nice   %sys %iowait   %irq  %soft  %steal  %guest  %gnice  %idle
+07:38:50 PM  all  98.47   0.00   0.75    0.00   0.00   0.00    0.00    0.00    0.00   0.78
+07:38:50 PM    0  96.04   0.00   2.97    0.00   0.00   0.00    0.00    0.00    0.00   0.99
+07:38:50 PM    1  97.00   0.00   1.00    0.00   0.00   0.00    0.00    0.00    0.00   2.00
+07:38:50 PM    2  98.00   0.00   1.00    0.00   0.00   0.00    0.00    0.00    0.00   1.00
+07:38:50 PM    3  96.97   0.00   0.00    0.00   0.00   0.00    0.00    0.00    0.00   3.03
+[...]
+</code></pre><p><strong>目的：</strong>显示各个可用CPU的状态。mpstat 指令主要用于多CPU环境下，它显示各个可用CPU的状态信息。这些信息存放在<code>/proc/stat</code>文件中。在多CPUs系统里，其不但能查看所有CPU的平均状况信息，而且能够查看特定CPU的信息。</p><p>这个命令打印了每个 CPU 各自的状态信息，可以用来检查是否有不平衡的情况。单点高负载 CPU 使用意味着可能存在某个（消耗CPU时间）的单线程应用程序。</p><h2 id="5-pidstat-1">5. pidstat 1</h2><pre><code>pidstat 1
+Linux 3.13.0-49-generic (titanclusters-xxxxx)  07/14/2015    _x86_64_    (32 CPU)
+
+07:41:02 PM   UID       PID    %usr %system  %guest    %CPU   CPU  Command
+07:41:03 PM     0         9    0.00    0.94    0.00    0.94     1  rcuos/0
+07:41:03 PM     0      4214    5.66    5.66    0.00   11.32    15  mesos-slave
+07:41:03 PM     0      4354    0.94    0.94    0.00    1.89     8  java
+07:41:03 PM     0      6521 1596.23    1.89    0.00 1598.11    27  java
+07:41:03 PM     0      6564 1571.70    7.55    0.00 1579.25    28  java
+07:41:03 PM 60004     60154    0.94    4.72    0.00    5.66     9  pidstat
+
+07:41:03 PM   UID       PID    %usr %system  %guest    %CPU   CPU  Command
+07:41:04 PM     0      4214    6.00    2.00    0.00    8.00    15  mesos-slave
+07:41:04 PM     0      6521 1590.00    1.00    0.00 1591.00    27  java
+07:41:04 PM     0      6564 1573.00   10.00    0.00 1583.00    28  java
+07:41:04 PM   108      6718    1.00    0.00    0.00    1.00     0  snmp-pass
+07:41:04 PM 60004     60154    1.00    4.00    0.00    5.00     9  pidstat
+^C
+</code></pre><p><strong>目的：</strong>用于监控全部或指定进程的 CPU、内存、线程、设备 IO 等系统资源的占用情况</p><p>Pidstat 有点像 top，区别在于前者是滚动打印，后者则是清屏。滚动打印对于观察一段时间内的变化很有用，也有助于复制进调查记录里。</p><p>上面的例子中，我们发现了两个消耗 CPU 资源的 Java 进程。结果中的 %CPU 一栏是所有CPU的总和，如 1591% 以为这这个 Java 进程几乎消耗了 16 个CPU。</p><h2 id="6-iostat--xz-1">6. iostat -xz 1</h2><pre><code>iostat -xz 1
+Linux 3.13.0-49-generic (titanclusters-xxxxx)  07/14/2015  _x86_64_ (32 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          73.96    0.00    3.73    0.03    0.06   22.21
+
+Device:   rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+xvda        0.00     0.23    0.21    0.18     4.52     2.08    34.37     0.00    9.98   13.80    5.42   2.44   0.09
+xvdb        0.01     0.00    1.02    8.94   127.97   598.53   145.79     0.00    0.43    1.78    0.28   0.25   0.25
+xvdc        0.01     0.00    1.02    8.86   127.79   595.94   146.50     0.00    0.45    1.82    0.30   0.27   0.26
+dm-0        0.00     0.00    0.69    2.32    10.47    31.69    28.01     0.01    3.23    0.71    3.98   0.13   0.04
+dm-1        0.00     0.00    0.00    0.94     0.01     3.78     8.00     0.33  345.84    0.04  346.81   0.01   0.00
+dm-2        0.00     0.00    0.09    0.07     1.35     0.36    22.50     0.00    2.55    0.23    5.62   1.78   0.03
+[...]
+^C
+</code></pre><p><strong>目的：</strong>监视系统输入输出设备和CPU的使用情况。iostat 被用于监视系统输入输出设备和 CPU 的使用情况。它的特点是汇报磁盘活动统计情况，同时也会汇报出 CPU 使用情况。同 vmsta 一样，iostat 也有一个弱点，就是它不能对某个进程进行深入分析，仅对系统的整体情况进行分析。</p><p>这是用来了解 block 设备（磁盘），工作负载和由此产生的性能的一个很好的工具。关注以下内容：</p><ul><li><code>r/s</code>、<code>w/s</code>、 <code>rkB/s</code>、 <code>wkB/s</code>：这些是设备每秒交付的读取、写入、读取千字节和写入千字节。使用这些来表征块设备的工作负载。性能问题可能是由于向块设备施加了过多的工作负载。</li><li><code>await</code>：IO的平均时间，以毫秒为单位。这是应用程序所感受到的时间，它包括 IO 排队时间和 IO 服务时间。大于预期的平均时间可能表示块设备饱和或设备出现问题了。</li><li><code>avgqu-sz</code>：发给设备的平均请求数。值大于1可以表明已达到饱和状态（尽管设备通常可以并行处理请求，尤其是在多个后端磁盘所组成的前端虚拟设备的情况下）。</li><li><code>%util</code>：设备利用率。这是一个表征繁忙度的百分比，它表示设备每秒工作的时间。尽管它的值取决于设备，但值大于60%通常会导致性能不佳（也会通过 await 的值观察到）。接近100%的值通常表示饱和。</li></ul><p>如果存储设备是有许多后端磁盘组成的前端逻辑磁盘设备，则100%的利用率可能仅意味着100%的时间正在处理某些IO，但是后端磁盘可能远远没有饱和，并且可能还可以处理更多的工作。</p><p>请记住，性能不佳的磁盘IO不一定是应用问题，通常可以使用许多技术以执行异步IO，以便使应用程序不会被阻塞住而产生直接产生IO延迟（例如，预读和缓冲写入技术）。</p><h2 id="7-free--m">7. free -m</h2><pre><code>free -m
+             total       used       free     shared    buffers     cached
+Mem:        245998      24545     221453         83         59        541
+-/+ buffers/cache:      23944     222053
+Swap:            0          0          0
+</code></pre><p>右边两列：</p><ul><li><code>buffers</code>：缓冲区高速缓存，用于块设备I / O</li><li><code>cached</code>：页面缓存，由文件系统使用</li></ul><p>我们只需要检查下它们的大小是否接近零。如果接近零的话，这可能导致较高的磁盘IO（可以使用iostat进行确认）和较差的性能。上面的示例看起来不错，每列都有较大的数据。</p><p><code>-/+ buffers/cache</code>为已用和空闲内存提供较少让人产生混乱的值。Linux将可用内存用于高速缓存，但是如果应用程序需要，它们可以快速被回收。因此应以某种方式将缓存的内存包括在<code>free</code>列中，这也就是这一行的所做的。甚至还有一个<a href="http://www.linuxatemyram.com/">网站</a>专门讨论了这种混乱。</p><p>如果在Linux上使用ZFS，就像我们对某些服务所做的那么，因为ZFS具有自己的文件系统缓存，它们并不会反映在<code>free -m</code>的列中，因此这种场景下这种混乱还将存在。所以会看到似乎系统的可用内存不足，而实际上可根据需要从ZFS缓存中申请到内存。</p><h2 id="8-sar--n-dev-1">8. sar -n DEV 1</h2><pre><code>$ sar -n DEV 1
+Linux 3.13.0-49-generic (titanclusters-xxxxx)  07/14/2015     _x86_64_    (32 CPU)
+12:16:48 AM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+12:16:49 AM      eth0  18763.00   5032.00  20686.42    478.30      0.00      0.00      0.00      0.00
+12:16:49 AM        lo     14.00     14.00      1.36      1.36      0.00      0.00      0.00      0.00
+12:16:49 AM   docker0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+12:16:49 AM     IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+12:16:50 AM      eth0  19763.00   5101.00  21999.10    482.56      0.00      0.00      0.00      0.00
+12:16:50 AM        lo     20.00     20.00      3.25      3.25      0.00      0.00      0.00      0.00
+12:16:50 AM   docker0      0.00      0.00      0.00      0.00      0.00      0.00      0.00      0.00
+^C
+</code></pre><p>此工具可以检查网络接口的吞吐量：<code>rxkB/s</code>和<code>txkB/s</code>，作为工作负载的度量，还可以检查是否已达到网络接口的限制。在上面的示例中，eth0接收速率达到22MB/s，即176Mbit/s（远低于1Gbit/s的网络接口限制，假设是千兆网卡）。</p><p>此版本还具有<code>%ifutil</code>用来指示设备利用率（全双工双向），这也是我们使用的Brendan的<a href="https://github.com/scotte/nicstat">nicstat工具</a>测量出来的。就像nicstat一样，这个指标很难计算正确，而且在本例中好像不起作用（数据是0.00）。</p><h2 id="9-sar--n-tcpetcp-1">9. sar -n TCP,ETCP 1</h2><pre><code>sar -n TCP,ETCP 1
+Linux 3.13.0-49-generic (titanclusters-xxxxx)  07/14/2015    _x86_64_    (32 CPU)
+
+12:17:19 AM  active/s passive/s    iseg/s    oseg/s
+12:17:20 AM      1.00      0.00  10233.00  18846.00
+
+12:17:19 AM  atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+12:17:20 AM      0.00      0.00      0.00      0.00      0.00
+
+12:17:20 AM  active/s passive/s    iseg/s    oseg/s
+12:17:21 AM      1.00      0.00   8359.00   6039.00
+
+12:17:20 AM  atmptf/s  estres/s retrans/s isegerr/s   orsts/s
+12:17:21 AM      0.00      0.00      0.00      0.00      0.00
+^C
+</code></pre><p>这是一些关键的TCP指标的摘要，包括：</p><ul><li><code>active / s</code>：每秒本地启动的TCP连接数（例如，通过connect（））。</li><li><code>passive/s</code>：每秒远程启动的TCP连接数（例如，通过accept（））。</li><li><code>retrans / s</code>：每秒TCP重传的次数。</li></ul><p>主动和被动计数通常作为服务器TCP负载的粗略度量：新接受的连接数（被动）和新出站的连接数（主动）。将主动视为出站，将被动视为入站可能对理解这两个指标有些帮助，但这并不是严格意义上的（例如，考虑从localhost到localhost的连接）。</p><p>重新传输是网络或服务器问题的迹象；它可能是不可靠的网络（例如，公共Internet），也可能是由于服务器过载并丢弃了数据包。上面的示例仅显示每秒一个新的TCP连接。</p><h2 id="10-top">10. top</h2><pre><code>top
+top - 00:15:40 up 21:56,  1 user,  load average: 31.09, 29.87, 29.92
+Tasks: 871 total,   1 running, 868 sleeping,   0 stopped,   2 zombie
+%Cpu(s): 96.8 us,  0.4 sy,  0.0 ni,  2.7 id,  0.1 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem:  25190241+total, 24921688 used, 22698073+free,    60448 buffers
+KiB Swap:        0 total,        0 used,        0 free.   554208 cached Mem
+
+   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+ 20248 root      20   0  0.227t 0.012t  18748 S  3090  5.2  29812:58 java
+  4213 root      20   0 2722544  64640  44232 S  23.5  0.0 233:35.37 mesos-slave
+ 66128 titancl+  20   0   24344   2332   1172 R   1.0  0.0   0:00.07 top
+  5235 root      20   0 38.227g 547004  49996 S   0.7  0.2   2:02.74 java
+  4299 root      20   0 20.015g 2.682g  16836 S   0.3  1.1  33:14.42 java
+     1 root      20   0   33620   2920   1496 S   0.0  0.0   0:03.82 init
+     2 root      20   0       0      0      0 S   0.0  0.0   0:00.02 kthreadd
+     3 root      20   0       0      0      0 S   0.0  0.0   0:05.35 ksoftirqd/0
+     5 root       0 -20       0      0      0 S   0.0  0.0   0:00.00 kworker/0:0H
+     6 root      20   0       0      0      0 S   0.0  0.0   0:06.94 kworker/u256:0
+     8 root      20   0       0      0      0 S   0.0  0.0   2:38.05 rcu_sched
+</code></pre><p><code>top</code>命令包括我们之前检查的许多指标。运行它可以很方便地查看是否有任何东西与以前的命令有很大不同，这表明负载是可变的。</p><p><code>top</code>命令不太好的地方是，随着时间的推移很难看到指标变化的模式，这在提供滚动输出的<code>vmstat</code>和<code>pidstat</code>之类的工具中可能更清楚一点。如果您没有足够快地暂停输出（Ctrl-S暂停，Ctrl-Q继续），在屏幕输出被<code>top</code>命令清除后，间歇性问题的证据也可能被丢失了。</p><h2 id="下一步">下一步</h2><p>关于 Linux 性能分析，还有更多的命令和方法，你可以通过这个<a href="https://netflixtechblog.com/netflix-at-velocity-2015-linux-performance-tools-51964ddb81cf">系列视频教程</a>进行更深入的学习。</p></article></main>
