@@ -6,6 +6,12 @@
           <description>yzsj98's blog</description>
           
           <item>
+            <title>单链表快速排序与水塘抽样</title>
+            <description>关于如何在单链表上快速排序，并用水塘抽样尝试过拟合验证集但最终失败这件事（逃</description>
+            <link>https://www.yizhishuijiao.com/post/202206110956</link>
+          </item>
+          
+          <item>
             <title>快速进行 Linux 性能分析：第一分钟</title>
             <description>翻译的一篇 Netflix 技术博客</description>
             <link>https://www.yizhishuijiao.com/post/202206082300</link>
