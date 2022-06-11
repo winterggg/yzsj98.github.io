@@ -1,6 +1,6 @@
 ```
 
-title: Java foreach 中 add、remove 元素的深入分析
+title: Java foreach 中 add、remove 元素的分析
 
 date: 2022.02.16 12:09
 
