@@ -51,7 +51,7 @@ int choose(ListNode head) {
     }
     return res;
 }
-</code></pre><p>结果很美丽啊， 54ms，超过 9% 的提交，又成功把性能恶化了一些 23333。</p><h2 id="水塘抽样算法">水塘抽样算法</h2><p>简单介绍以下水塘抽样吧。水塘抽样算法解决这样一类问题，给定一个<strong>未知长度</strong>的链表，如何设计一个算法，<strong>只能遍历一遍</strong>，随机地返回链表中的一个节点。算法的思路也很简单，<strong>遇到的第 <code>i</code> 个元素时，有 <code>1/i</code> 的概率选择该元素，<code>1 - 1/i</code> 的概率保持原有的选择</strong>。</p><pre><code class="language-java">Random rnd = new Random();
+</code></pre><p>结果很美丽啊， 54ms，超过 9% 的提交，又成功把性能恶化了一些 23333。</p><h2 id="水塘抽样算法">水塘抽样算法</h2><p>简单复习一下水塘抽样吧。水塘抽样算法解决这样一类问题，给定一个<strong>未知长度</strong>的链表，如何设计一个算法，<strong>只能遍历一遍</strong>，随机地返回链表中的一个节点。算法的思路也很简单，<strong>遇到的第 <code>i</code> 个元素时，有 <code>1/i</code> 的概率选择该元素，<code>1 - 1/i</code> 的概率保持原有的选择</strong>。</p><pre><code class="language-java">Random rnd = new Random();
 int choose(ListNode head) {
     int i = 0, res = 0;
     for (ListNode p = head; p != null; p = p.next) {
