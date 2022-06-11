@@ -1,4 +1,4 @@
-<!DOCTYPE html><head><title>Java foreach 中 add、remove 元素的深入分析 - yzsj98's blog</title><meta name="description" content="看代码时偶尔发现的 Java 使用问题"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>Java foreach 中 add、remove 元素的深入分析</h1><p>今天看 Java 源码的时候发现如下一段代码：</p><pre><code class="language-java">List&lt;ShopCartBo&gt; shopCartList = /** 从 Redis 中取购物车 List **/
+<!DOCTYPE html><head><title>Java foreach 中 add、remove 元素的分析 - yzsj98's blog</title><meta name="description" content="看代码时偶尔发现的 Java 使用问题"><script src="/bundle.js" onload="[].flat||(location='/update.html')"></script></head><main><article><h1>Java foreach 中 add、remove 元素的分析</h1><p>今天看 Java 源码的时候发现如下一段代码：</p><pre><code class="language-java">List&lt;ShopCartBo&gt; shopCartList = /** 从 Redis 中取购物车 List **/
 for (ShopcartBo sc: shopcartList) {
     if (sc.getSpecId().equals(itemSpecId)) {
         shopcartList.remove(sc);
