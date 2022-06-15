@@ -6,12 +6,6 @@
           <description>yzsj98's blog</description>
           
           <item>
-            <title>手写代码 OJ 链接整理</title>
-            <description>整理一些需要记忆的手写代码的 OJ 链接，方便复习操练。</description>
-            <link>https://www.yizhishuijiao.com/post/202206131000</link>
-          </item>
-          
-          <item>
             <title>单链表快速排序与水塘抽样</title>
             <description>关于如何在单链表上快速排序，并用水塘抽样尝试过拟合验证集但最终失败这件事（逃</description>
             <link>https://www.yizhishuijiao.com/post/202206110956</link>
@@ -68,6 +62,12 @@
           <item>
             <title>New Post Template</title>
             <description>The post description</description>
+            <link>https://www.yizhishuijiao.com/post/201901010000</link>
+          </item>
+          
+          <item>
+            <title>手写代码 OJ 链接整理</title>
+            <description>整理一些需要记忆的手写代码的 OJ 链接，方便复习操练。</description>
             <link>https://www.yizhishuijiao.com/post/201901010000</link>
           </item>
           
