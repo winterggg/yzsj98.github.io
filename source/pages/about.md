@@ -7,11 +7,11 @@ title: 关于
 
 - 努力进步，不求完美
 
-## 联系方式
+<!-- ## 联系方式
 
 | 类型   | 地址                                |
 | ------ | ----------------------------------- |
-| GitHub | [yzsj98](https://github.com/yzsj98) |
+| GitHub | [yzsj98](https://github.com/yzsj98) | -->
 
 
 ## 友链
